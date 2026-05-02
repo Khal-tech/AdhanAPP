@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Khalil — Prayer Times</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="assets/CSS/flag-icons-main/css/flag-icons.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital@0;1&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Cinzel:wght@400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="assets/CSS/style.css">
+    <link rel="stylesheet" href="assets/CSS/styleLoader.css">
+    <link rel="stylesheet" href="assets/CSS/styleV2.css">
+</head>
+<body>
+
+<!-- LOADER -->
+<section class="loader" id="loader">
+    <svg id="coupole-bg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid slice">
+        <defs>
+            <pattern id="zellij" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
+                <rect width="100" height="100" fill="none"/>
+                <line x1="0" y1="0" x2="100" y2="100" stroke="#5a8c84" stroke-width="5"/>
+                <line x1="100" y1="0" x2="0" y2="100" stroke="#5a8c84" stroke-width="5"/>
+                <line x1="50" y1="0" x2="50" y2="100" stroke="#b8821a" stroke-width="5"/>
+                <line x1="0" y1="50" x2="100" y2="50" stroke="#b8821a" stroke-width="5"/>
+                <line x1="25" y1="0" x2="75" y2="100" stroke="#8b3a1a" stroke-width="2.5"/>
+                <line x1="75" y1="0" x2="25" y2="100" stroke="#8b3a1a" stroke-width="2.5"/>
+                <line x1="0" y1="25" x2="100" y2="75" stroke="#8b3a1a" stroke-width="2.5"/>
+                <line x1="0" y1="75" x2="100" y2="25" stroke="#8b3a1a" stroke-width="2.5"/>
+                <polygon points="50,12 54.5,38 80,30 64,50 80,70 54.5,62 50,88 45.5,62 20,70 36,50 20,30 45.5,38" fill="#5a8c84" opacity="0.55"/>
+                <polygon points="50,12 54.5,38 80,30 64,50 80,70 54.5,62 50,88 45.5,62 20,70 36,50 20,30 45.5,38" fill="none" stroke="#b8821a" stroke-width="0.7"/>
+                <rect x="29" y="29" width="42" height="42" rx="1" transform="rotate(45 50 50)" fill="#d4a044" opacity="0.18" stroke="#d4a044" stroke-width="0.5"/>
+                <polygon points="50,0 55,7 50,14 45,7" fill="#8b3a1a" opacity="0.35"/>
+                <polygon points="100,50 93,55 86,50 93,45" fill="#8b3a1a" opacity="0.35"/>
+                <polygon points="50,100 55,93 50,86 45,93" fill="#8b3a1a" opacity="0.35"/>
+                <polygon points="0,50 7,55 14,50 7,45" fill="#8b3a1a" opacity="0.35"/>
+                <circle cx="50" cy="50" r="7" fill="#b8821a" opacity="0.3" stroke="#5a8c84" stroke-width="0.6"/>
+                <circle cx="50" cy="50" r="2.5" fill="#d4a044" opacity="0.5"/>
+            </pattern>
+            <pattern id="flora" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
+                <rect width="60" height="60" fill="none"/>
+                <circle cx="30" cy="30" r="10" fill="none" stroke="#7aada4" stroke-width="0.8" opacity="0.6"/>
+                <circle cx="30" cy="30" r="5" fill="none" stroke="#b8821a" stroke-width="0.6" opacity="0.5"/>
+                <circle cx="30" cy="30" r="1.5" fill="#d4a044" opacity="0.5"/>
+                <ellipse cx="30" cy="17" rx="3" ry="6" fill="#5a8c84" opacity="0.3"/>
+                <ellipse cx="30" cy="43" rx="3" ry="6" fill="#5a8c84" opacity="0.3"/>
+                <ellipse cx="17" cy="30" rx="6" ry="3" fill="#8b3a1a" opacity="0.25"/>
+                <ellipse cx="43" cy="30" rx="6" ry="3" fill="#8b3a1a" opacity="0.25"/>
+                <ellipse cx="21" cy="21" rx="3" ry="6" fill="#b8821a" opacity="0.2" transform="rotate(45 21 21)"/>
+                <ellipse cx="39" cy="21" rx="3" ry="6" fill="#b8821a" opacity="0.2" transform="rotate(-45 39 21)"/>
+                <ellipse cx="21" cy="39" rx="3" ry="6" fill="#b8821a" opacity="0.2" transform="rotate(-45 21 39)"/>
+                <ellipse cx="39" cy="39" rx="3" ry="6" fill="#b8821a" opacity="0.2" transform="rotate(45 39 39)"/>
+                <circle cx="0" cy="0" r="3" fill="#5a8c84" opacity="0.25"/>
+                <circle cx="60" cy="0" r="3" fill="#5a8c84" opacity="0.25"/>
+                <circle cx="0" cy="60" r="3" fill="#5a8c84" opacity="0.25"/>
+                <circle cx="60" cy="60" r="3" fill="#5a8c84" opacity="0.25"/>
+            </pattern>
+        </defs>
+        <rect width="1000" height="1000" fill="url(#zellij)"/>
+        <polygon points="500,20 840,160 980,500 840,840 500,980 160,840 20,500 160,160" fill="none" stroke="#5a8c84" stroke-width="2.5" opacity="0.45"/>
+        <polygon points="500,120 758,232 868,490 758,748 500,860 242,748 132,490 242,232" fill="none" stroke="#7aada4" stroke-width="2" opacity="0.4"/>
+        <polygon points="500,120 758,232 868,490 758,748 500,860 242,748 132,490 242,232" fill="url(#flora)" opacity="0.35"/>
+        <polygon points="500,300 608,360 660,490 608,620 500,680 392,620 340,490 392,360" fill="url(#flora)" opacity="0.5"/>
+        <polygon points="500,300 608,360 660,490 608,620 500,680 392,620 340,490 392,360" fill="none" stroke="#7aada4" stroke-width="2" opacity="0.5"/>
+        <circle cx="500" cy="490" r="90" fill="url(#flora)" opacity="0.6"/>
+        <circle cx="500" cy="490" r="90" fill="none" stroke="#5a8c84" stroke-width="1.5" opacity="0.45"/>
+        <circle cx="500" cy="490" r="30" fill="#d4a044" opacity="0.12"/>
+        <circle cx="500" cy="490" r="8" fill="#b8821a" opacity="0.2"/>
+        <g opacity="0.28">
+            <circle cx="120" cy="120" r="60" fill="url(#flora)"/>
+            <circle cx="880" cy="120" r="60" fill="url(#flora)"/>
+            <circle cx="120" cy="880" r="60" fill="url(#flora)"/>
+            <circle cx="880" cy="880" r="60" fill="url(#flora)"/>
+        </g>
+    </svg>
+    <div class="vignette"></div>
+    <div class="corner c-tl"><svg viewBox="0 0 72 72" fill="none"><path d="M4 68 L4 4 L68 4" stroke="#7aada4" stroke-width="1"/><circle cx="12" cy="12" r="4" stroke="#7aada4" stroke-width="0.8" fill="none"/><circle cx="12" cy="12" r="1.5" fill="#b8821a" opacity="0.5"/></svg></div>
+    <div class="corner c-tr"><svg viewBox="0 0 72 72" fill="none"><path d="M68 68 L68 4 L4 4" stroke="#7aada4" stroke-width="1"/><circle cx="60" cy="12" r="4" stroke="#7aada4" stroke-width="0.8" fill="none"/><circle cx="60" cy="12" r="1.5" fill="#b8821a" opacity="0.5"/></svg></div>
+    <div class="corner c-bl"><svg viewBox="0 0 72 72" fill="none"><path d="M4 4 L4 68 L68 68" stroke="#7aada4" stroke-width="1"/><circle cx="12" cy="60" r="4" stroke="#7aada4" stroke-width="0.8" fill="none"/><circle cx="12" cy="60" r="1.5" fill="#b8821a" opacity="0.5"/></svg></div>
+    <div class="corner c-br"><svg viewBox="0 0 72 72" fill="none"><path d="M68 4 L68 68 L4 68" stroke="#7aada4" stroke-width="1"/><circle cx="60" cy="60" r="4" stroke="#7aada4" stroke-width="0.8" fill="none"/><circle cx="60" cy="60" r="1.5" fill="#b8821a" opacity="0.5"/></svg></div>
+    <div class="stage">
+        <div class="bismillah">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
+        <div class="star-wrap">
+            <svg class="s-outer" viewBox="0 0 104 104" fill="none"><circle cx="52" cy="52" r="50" stroke="#7aada4" stroke-width="0.5" stroke-dasharray="6 5" opacity="0.5"/><polygon points="52,6 58,34 86,24 68,48 96,52 68,56 86,80 58,70 52,98 46,70 18,80 36,56 8,52 36,48 18,24 46,34" fill="none" stroke="#7aada4" stroke-width="1" opacity="0.7"/></svg>
+            <svg class="s-inner" viewBox="0 0 66 66" fill="none"><circle cx="33" cy="33" r="31" fill="#faf6f0" stroke="#b8821a" stroke-width="0.6" opacity="0.8"/><polygon points="33,8 37,23 52,18 43,29 58,33 43,37 52,48 37,43 33,58 29,43 14,48 23,37 8,33 23,29 14,18 29,23" fill="#7aada4" opacity="0.35"/><polygon points="33,8 37,23 52,18 43,29 58,33 43,37 52,48 37,43 33,58 29,43 14,48 23,37 8,33 23,29 14,18 29,23" fill="none" stroke="#b8821a" stroke-width="0.7" opacity="0.6"/><circle cx="33" cy="33" r="8" fill="#faf6f0" stroke="#7aada4" stroke-width="0.6"/><circle cx="33" cy="33" r="3" fill="#b8821a" opacity="0.45"/></svg>
+        </div>
+        <div class="app-name">
+            <div class="khalil-ar">خليل</div>
+            <div class="khalil-en">Khalil</div>
+        </div>
+        <div class="tagline">Your <em>companion</em> on every path<br>رفيقك في كل درب</div>
+        <div class="divider">
+            <div class="div-line"></div>
+            <div class="gem gem-sm"></div>
+            <div class="gem gem-teal"></div>
+            <div class="gem gem-gold"></div>
+            <div class="gem gem-teal"></div>
+            <div class="gem gem-sm"></div>
+            <div class="div-line"></div>
+        </div>
+        <div class="progress-wrap">
+            <div class="bar-track"><div class="bar-fill"></div></div>
+            <div class="status-txt" id="statusTxt">Awaiting your location…</div>
+        </div>
+    </div>
+</section>
+
+<!-- SETTINGS OVERLAY -->
+<div class="settings-overlay" id="settingsOverlay"></div>
+
+<!-- SETTINGS PANEL -->
+<aside class="settings-panel" id="settingsPanel">
+    <div class="settings-header">
+        <span class="settings-title" data-i18n="settings">Settings</span>
+        <button class="settings-close" id="closeSettings"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="settings-body">
+        <div class="settings-group">
+            <div class="settings-group-label" data-i18n="language">Language</div>
+            <div class="settings-toggle-row">
+                <button class="stg-toggle-btn active" id="langEn">English</button>
+                <button class="stg-toggle-btn" id="langAr">العربية</button>
+            </div>
+        </div>
+        <div class="settings-group">
+            <div class="settings-group-label" data-i18n="timeFormat">Time Format</div>
+            <div class="settings-toggle-row">
+                <button class="stg-toggle-btn active" id="format24">24h</button>
+                <button class="stg-toggle-btn" id="format12">12h</button>
+            </div>
+        </div>
+        <div class="settings-group">
+            <div class="settings-group-label" data-i18n="calcMethod">Calculation Method</div>
+            <select class="stg-select" id="calcMethodSelect"></select>
+        </div>
+    </div>
+    <div class="method-dialog" id="methodDialog">
+        <div class="method-dialog-inner">
+            <div class="method-dialog-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+            <p class="method-dialog-text" data-i18n="methodWarning">The current method is your country's default. Changing it may result in inaccurate prayer times for your region.</p>
+            <div class="method-dialog-actions">
+                <button class="method-btn-cancel" id="methodCancel" data-i18n="keepCurrent">Keep Current</button>
+                <button class="method-btn-confirm" id="methodConfirm" data-i18n="proceed">Proceed Anyway</button>
+            </div>
+        </div>
+    </div>
+</aside>
+
+<!-- MODAL -->
+<div class="modal-backdrop" id="modalBackdrop">
+    <div class="modal-box">
+        <div class="modal-header">
+            <span class="modal-title" id="modalTitle"></span>
+            <button class="modal-close" id="modalClose"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="modal-body" id="modalBody"></div>
+    </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="mainBody" style="visibility:hidden;opacity:0;display:none;">
+    <div id="wrapperBackground" class="wrapperBackground changeableBG"></div>
+    <div class="background">
+
+        <!-- Prayer Popup -->
+        <div class="itsPrayerTimePopUp" id="itsPrayerTimePopUp">
+            <div class="popup-inner">
+                <div class="popup-icon"><i class="fa-solid fa-mosque"></i></div>
+                <p class="popup-text">
+                    <span data-i18n="itsPrayerTime">The time of</span>
+                    <strong id="popUpPrayer"></strong>
+                    <span data-i18n="hasArrived">prayer has arrived. Rise and pray.</span>
+                </p>
+                <button class="popup-dismiss" onclick="removeFunc()" data-i18n="turnOff">Dismiss</button>
+            </div>
+        </div>
+
+        <!-- Header -->
+        <header class="headerBar">
+            <div class="leftHeaderBar">
+                <div class="mosqueIcon"></div>
+                <div class="header-location">
+                    <span class="header-label" data-i18n="prayerTimesOf">Prayer Times Of</span>
+                    <span class="header-city" id="geoInfos"></span>
+                </div>
+                <span id="countryIcon" style="border-radius:50%;font-size:1.8rem;"></span>
+            </div>
+            <button class="settingsButton" id="settingsBtn">
+                <i class="fa-solid fa-gear"></i>
+            </button>
+        </header>
+
+        <!-- Main Section -->
+        <section class="main">
+            <div class="timeInfos">
+                <div id="img" class="img changeableBG">
+                    <div class="temporalInfo">
+                        <h3><span class="cal-label" data-i18n="miladi">MILADI</span> <span id="miladiCal"></span></h3>
+                        <h3><span class="cal-label" data-i18n="hijri">HIJRI</span> <span id="hijriCal"></span></h3>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mainContent">
+
+                <!-- LEFT -->
+                <div class="left">
+                    <div class="infos">
+                        <div class="currentTime">
+                            <span class="time-label" data-i18n="timeNowIs">Time now is</span>
+                            <span class="time-value" id="currentTime"></span>
+                        </div>
+                        <div class="nextPrayer">
+                            <div class="next-row">
+                                <span class="next-label" data-i18n="nextIs">Next is</span>
+                                <strong id="nextPrayer"></strong>
+                                <span class="next-time" id="nextPrayerTime"></span>
+                            </div>
+                            <div class="countdown-row">
+                                <span class="countdown-label" data-i18n="timeToPrayer">Time to prayer:</span>
+                                <span class="countdown-value" id="remainingPrayerTime"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="section-divider">
+                    <ul class="prayerTimes">
+                        <li class="prayer" data-prayer="fajr">
+                            <span class="prayer-label" data-i18n="fajr">Fajr</span>
+                            <span class="prayer-time" id="Fajr"></span>
+                        </li>
+                        <li class="prayer" data-prayer="churuq">
+                            <span class="prayer-label" data-i18n="churuq">Churuq</span>
+                            <span class="prayer-time" id="Churuq"></span>
+                        </li>
+                        <li class="prayer" data-prayer="dhuhr">
+                            <span class="prayer-label" data-i18n="dhuhr">Dhuhr</span>
+                            <span class="prayer-time" id="Dhuhr"></span>
+                        </li>
+                        <li class="prayer" data-prayer="asr">
+                            <span class="prayer-label" data-i18n="asr">Asr</span>
+                            <span class="prayer-time" id="Asr"></span>
+                        </li>
+                        <li class="prayer" data-prayer="maghrib">
+                            <span class="prayer-label" data-i18n="maghrib">Maghrib</span>
+                            <span class="prayer-time" id="Maghrib"></span>
+                        </li>
+                        <li class="prayer" data-prayer="isha">
+                            <span class="prayer-label" data-i18n="isha">Isha</span>
+                            <span class="prayer-time" id="Isha"></span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- RIGHT -->
+                <div class="right">
+                    <div class="calendar-section" id="hijriCalWidget"></div>
+                    <hr class="section-divider">
+                    <div class="featureSection">
+
+                        <div class="features">
+                            <div class="featureButton">
+                                <button data-feature="quran">
+                                    <i class="fa-solid fa-book-quran"></i>
+                                    <span data-i18n="quran">Quran</span>
+                                </button>
+                            </div>
+                            <div class="featureButton">
+                                <button data-feature="wakeDhikr">
+                                    <i class="fa-solid fa-sun-plant-wilt"></i>
+                                    <span data-i18n="wakeDhikr">Wake Dhikr</span>
+                                </button>
+                            </div>
+                            <div class="featureButton">
+                                <button data-feature="morningDhikr">
+                                    <i class="fa-solid fa-cloud-sun"></i>
+                                    <span data-i18n="morningDhikr">Morning Dhikr</span>
+                                </button>
+                            </div>
+                            <div class="featureButton">
+                                <button data-feature="eveningDhikr">
+                                    <i class="fa-solid fa-cloud-moon"></i>
+                                    <span data-i18n="eveningDhikr">Evening Dhikr</span>
+                                </button>
+                            </div>
+                            <div class="featureButton">
+                                <button data-feature="nightDhikr">
+                                    <i class="fa-solid fa-moon"></i>
+                                    <span data-i18n="nightDhikr">Night Dhikr</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="features">
+                            <div class="featureButton">
+                                <button data-feature="sleepingDhikr">
+                                    <i class="fa-solid fa-bed"></i>
+                                    <span data-i18n="sleepingDhikr">Sleeping Dhikr</span>
+                                </button>
+                            </div>
+                            <div class="featureButton">
+                                <button data-feature="tasbih">
+                                    <i class="fa-solid fa-circle-dot"></i>
+                                    <span data-i18n="tasbih">Tasbih</span>
+                                </button>
+                            </div>
+                            <div class="featureButton">
+                                <button data-feature="hijriCalendar">
+                                    <i class="fa-solid fa-calendar-days"></i>
+                                    <span data-i18n="hijriCal">Hijri Cal</span>
+                                </button>
+                            </div>
+                            <div class="featureButton">
+                                <button data-feature="asmaUlHusna">
+                                    <i class="fa-solid fa-star-and-crescent"></i>
+                                    <span data-i18n="asmaUlHusna">99 Names</span>
+                                </button>
+                            </div>
+                            <div class="featureButton">
+                                <button data-feature="duaOfDay">
+                                    <i class="fa-solid fa-hands-praying"></i>
+                                    <span data-i18n="duaOfDay">Dua</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="features">
+                            <div class="featureButton">
+                                <button data-feature="sunnahTimes">
+                                    <i class="fa-solid fa-sun"></i>
+                                    <span data-i18n="sunnahTimes">Sunnah</span>
+                                </button>
+                            </div>
+                            <div class="featureButton">
+                                <button data-feature="qiyam">
+                                    <i class="fa-solid fa-star"></i>
+                                    <span data-i18n="qiyam">Qiyam</span>
+                                </button>
+                            </div>
+                            <div class="featureButton">
+                                <button data-feature="hadith">
+                                    <i class="fa-solid fa-scroll"></i>
+                                    <span data-i18n="hadith">Hadith</span>
+                                </button>
+                            </div>
+                            <div class="featureButton">
+                                <button data-feature="donation">
+                                    <i class="fa-solid fa-heart"></i>
+                                    <span data-i18n="donation">Support</span>
+                                </button>
+                            </div>
+                            <!-- Qibla: hidden on desktop via CSS, shown on mobile/tablet -->
+                            <div class="featureButton qibla-only">
+                                <button data-feature="qibla">
+                                    <i class="fa-solid fa-compass"></i>
+                                    <span data-i18n="qibla">Qibla</span>
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </div>
+</div>
+
+<script src="assets/JS/adhanJS/script.js"></script>
+<script src="assets/JS/newcript.js" type="module"></script>
+<script src="assets/JS/script.js"></script>
+<script src="assets/JS/scriptLoader.js"></script>
+</body>
+</html>
