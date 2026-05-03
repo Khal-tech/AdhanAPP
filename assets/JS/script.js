@@ -37,7 +37,7 @@ var T = {
   en: {
     prayerTimesOf: "Prayer Times Of",
     timeNowIs: "Time now is",
-    nextIs: "Next is",
+    nextIs: "Next prayer is",
     timeToPrayer: "Time to prayer:",
     fajr: "Fajr",
     churuq: "Churuq",
@@ -125,7 +125,7 @@ var T = {
   ar: {
     prayerTimesOf: "أوقات الصلاة في",
     timeNowIs: "الوقت الحالي",
-    nextIs: "القادمة",
+    nextIs: "الصلاة التالية",
     timeToPrayer: "الوقت المتبقي:",
     fajr: "الفجر",
     churuq: "الشروق",
