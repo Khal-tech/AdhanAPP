@@ -1360,7 +1360,7 @@ function openDonation() {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-//  QIBLA COMPASS
+//  QIBLA COMPASS — REWRITTEN & CORRECTED
 // ═══════════════════════════════════════════════════════════════════════════
 
 function openQibla() {
@@ -1369,226 +1369,179 @@ function openQibla() {
     return;
   }
 
+  // Calculate the static bearing from user to Mecca
   var bearing = qiblaBearing(
     parseFloat(state.geoData.latitude),
     parseFloat(state.geoData.longitude),
   );
+  var bearingFixed = bearing.toFixed(1);
 
+  // Build the HTML for the modal
   var html =
     '<div class="qibla-wrap">' +
-    // Bearing number + label
+    // Display the calculated bearing
     '<div class="qibla-bearing-info">' +
-    '<span class="qibla-degrees">' +
-    bearing.toFixed(1) +
-    "°</span>" +
-    '<span class="qibla-bearing-label">' +
-    t("qiblaBearing") +
-    "</span>" +
-    "</div>" +
-    // Compass ring — ring rotates with phone, arrow stays fixed pointing to Mecca
-    '<div class="qibla-compass-ring" id="qiblaRing">' +
-    // Cardinal labels — rotate WITH the ring
-    '<div class="compass-cardinal compass-N">N</div>' +
-    '<div class="compass-cardinal compass-E">E</div>' +
-    '<div class="compass-cardinal compass-S">S</div>' +
-    '<div class="compass-cardinal compass-W">W</div>' +
-    // Tick marks ring
-    '<div class="compass-ticks">' +
-    (function () {
-      var ticks = "";
-      for (var i = 0; i < 72; i++) {
-        var major = i % 9 === 0;
-        ticks +=
-          '<div class="compass-tick' +
-          (major ? " major" : "") +
-          '" style="transform:rotate(' +
-          i * 5 +
-          'deg)"></div>';
-      }
-      return ticks;
-    })() +
-    "</div>" +
-    // Qibla arrow — FIXED, always points toward Mecca
-    // Rotated by bearing from North; ring rotates around it
+    '<span class="qibla-degrees">' + bearingFixed + '°</span>' +
+    '<span class="qibla-bearing-label">' + t("qiblaBearing") + '</span>' +
+    '</div>' +
+
+    // The compass container - this stays fixed
+    '<div class="qibla-compass-container">' +
+    // The rotating compass rose INSIDE the container
+    '<div class="qibla-compass-rose" id="compassRose">' +
+    // Cardinal directions - painted on the rose, so they rotate with it
+    '<div class="compass-cardinal compass-n">N</div>' +
+    '<div class="compass-cardinal compass-e">E</div>' +
+    '<div class="compass-cardinal compass-s">S</div>' +
+    '<div class="compass-cardinal compass-w">W</div>' +
+    '</div>' +
+
+    // The needle - FIXED, always points to Mecca. Placed on top.
     '<div class="qibla-needle" id="qiblaNeedle">' +
-    '<div class="needle-kaaba"><i class="fa-solid fa-kaaba"></i></div>' +
-    '<div class="needle-shaft"></div>' +
+    '<div class="needle-head"></div>' +
+    '<div class="needle-center"></div>' +
     '<div class="needle-tail"></div>' +
-    "</div>" +
-    "</div>" +
-    // Guidance text — updates live
+    '</div>' +
+    '</div>' + // End .qibla-compass-container
+
+    // Guidance text area
     '<div class="qibla-guidance" id="qiblaGuidance">' +
-    '<div class="guidance-icon" id="guidanceIcon"><i class="fa-solid fa-compass"></i></div>' +
-    '<div class="guidance-text" id="guidanceText">' +
-    t("qiblaPermission") +
-    "</div>" +
-    "</div>" +
-    // Permission button (hidden once live)
-    '<div id="qiblaStatusWrap">' +
+    '<div class="guidance-icon"><i class="fa-solid fa-compass"></i></div>' +
+    '<div class="guidance-text" id="guidanceText">' + t("qiblaPermission") + '</div>' +
+    '</div>' +
+
+    // Permission button (hidden once active)
+    '<div class="qibla-permission-wrap" id="qiblaPermWrap">' +
     '<button class="qibla-perm-btn" id="qiblaPermBtn">' +
-    '<i class="fa-solid fa-compass"></i> ' +
-    t("qiblaPermission") +
-    "</button>" +
-    "</div>" +
-    "</div>";
+    '<i class="fa-solid fa-compass"></i> ' + t("qiblaPermission") +
+    '</button>' +
+    '</div>' +
+    '</div>';
 
   openModal(t("qibla"), html);
   state.qiblaActive = true;
 
-  // Point the needle at Mecca from the start (static bearing, no heading yet)
-  var needle = document.getElementById("qiblaNeedle");
-  if (needle) needle.style.transform = "rotate(" + bearing + "deg)";
+  // Immediately point the needle correctly (static bearing)
+  var needle = document.getElementById('qiblaNeedle');
+  if (needle) {
+    needle.style.transform = 'rotate(' + bearing + 'deg)';
+  }
 
-  document
-    .getElementById("qiblaPermBtn")
-    .addEventListener("click", function () {
-      startCompass(bearing);
-    });
+  // Bind the permission button click event
+  document.getElementById('qiblaPermBtn').addEventListener('click', function() {
+    startCompass(bearing);
+  });
 
-  // Android — auto-start, no permission needed
-  if (
-    typeof DeviceOrientationEvent !== "undefined" &&
-    typeof DeviceOrientationEvent.requestPermission !== "function"
-  ) {
+  // Auto-start on Android (no permission needed)
+  if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission !== 'function') {
     startCompass(bearing);
   }
 }
 
 function startCompass(qiblaBearingDeg) {
-  var ring = document.getElementById("qiblaRing");
-  var needle = document.getElementById("qiblaNeedle");
-  var guidanceEl = document.getElementById("guidanceText");
-  var iconEl = document.getElementById("guidanceIcon");
-  var statusWrap = document.getElementById("qiblaStatusWrap");
-  var alreadyConfirmed = false;
+  var rose = document.getElementById('compassRose');
+  var guidanceText = document.getElementById('guidanceText');
+  var guidanceIcon = document.querySelector('.guidance-icon');
+  var permWrap = document.getElementById('qiblaPermWrap');
+  var isAligned = false; // Flag for haptic feedback
 
-  // Guidance logic — how many degrees off are they?
-  function getGuidance(diff) {
-    // diff: signed angle, negative = turn left, positive = turn right
-    var abs = Math.abs(diff);
-    var isAr = state.lang === "ar";
+  // Hide the permission button once activated
+  if (permWrap) permWrap.style.display = 'none';
 
-    if (abs <= 10) {
-      return {
-        text: isAr ? "✓ أنت تواجه القبلة" : "✓ You are facing the Qibla",
-        level: "exact",
-      };
-    }
-    if (abs >= 160) {
-      return {
-        text: isAr
-          ? "أنت في الاتجاه المعاكس تماماً — استدر"
-          : "Opposite direction — turn around",
-        level: "opposite",
-      };
+  // Function to calculate guidance message
+  function getGuidance(angleDiff) {
+    var absDiff = Math.abs(angleDiff);
+    var lang = state.lang;
+
+    if (absDiff < 10) {
+      return { text: lang === 'ar' ? '✓ اتجاهك صحيح' : '✓ Facing Qibla', level: 'aligned' };
+    } else if (absDiff > 170) {
+      return { text: lang === 'ar' ? 'اتجاه معاكس - استدر' : 'Opposite direction - turn around', level: 'opposite' };
     }
 
-    var dir, intensity;
-    if (diff > 0) {
-      dir = isAr ? "يميناً" : "right";
-    } else {
-      dir = isAr ? "يساراً" : "left";
-    }
+    var direction = angleDiff > 0 ? (lang === 'ar' ? 'يسارًا' : 'left') : (lang === 'ar' ? 'يمينًا' : 'right');
+    var intensity = '';
 
-    if (abs > 45) {
-      intensity = isAr ? "استدر " : "Turn ";
-    } else if (abs > 20) {
-      intensity = isAr ? "قليلاً إلى " : "A little to the ";
-    } else {
-      intensity = isAr ? "بشكل طفيف إلى " : "Slightly to the ";
-    }
+    if (absDiff > 90) intensity = lang === 'ar' ? 'استدر ' : 'Turn ';
+    else if (absDiff > 30) intensity = lang === 'ar' ? 'أدر ' : 'Turn ';
+    else intensity = lang === 'ar' ? 'انحرف ' : 'Adjust ';
 
-    var degsText = isAr
-      ? " (" + Math.round(abs) + "°)"
-      : " (" + Math.round(abs) + "°)";
-
-    return {
-      text: intensity + dir + degsText,
-      level: abs > 45 ? "far" : "close",
-    };
+    return { text: intensity + direction, level: 'adjusting' };
   }
 
-  function requestAndStart() {
-    if (statusWrap) statusWrap.style.display = "none";
+  // The main compass handler
+  state.compassWatch = function(event) {
+    // Get the device's compass heading
+    var heading = null;
 
-    state.compassWatch = function (e) {
-      var heading =
-        e.webkitCompassHeading != null
-          ? e.webkitCompassHeading
-          : e.alpha != null
-            ? 360 - e.alpha
-            : null;
-      if (heading === null || heading === undefined) return;
+    // Check for iOS (webkitCompassHeading) and Android (alpha)
+    if (event.webkitCompassHeading !== undefined) {
+      heading = event.webkitCompassHeading;
+    } else if (event.alpha !== null) {
+      // Android: alpha is 0-360, but relative to device orientation.
+      // We need to convert it to a magnetic heading.
+      // This is a simplification and may need calibration on some devices.
+      heading = 360 - event.alpha;
+    }
 
-      // Ring rotates with the phone so cardinal points track reality
-      // (ring counter-rotates by heading so N label always faces world North)
-      if (ring) ring.style.setProperty("--ring-rotation", -heading + "deg");
+    // If we have a valid heading, update the UI
+    if (heading !== null) {
+      // Rotate the compass rose so that 'N' on the rose aligns with magnetic north
+      if (rose) rose.style.transform = 'rotate(' + (-heading) + 'deg)';
 
-      // Needle lives INSIDE the rotating ring.
-      // Ring applies: -heading. To point at fixed world bearing (Qibla):
-      // needle transform = qiblaBearing - (-heading) = qiblaBearing + heading
-      if (needle)
-        needle.style.transform =
-          "rotate(" + (qiblaBearingDeg + heading) + "deg)";
+      // The needle is already pointed at the static Qibla bearing.
+      // Now calculate how far off the user is from that bearing.
+      var userToQiblaAngle = qiblaBearingDeg - heading;
 
-      // How far off is the user from Qibla?
-      var diff = qiblaBearingDeg - heading;
-      // Normalize to -180 → +180
-      while (diff > 180) diff -= 360;
-      while (diff < -180) diff += 360;
+      // Normalize the angle to between -180 and 180 for the guidance message
+      while (userToQiblaAngle > 180) userToQiblaAngle -= 360;
+      while (userToQiblaAngle < -180) userToQiblaAngle += 360;
 
-      var guidance = getGuidance(diff);
-      if (guidanceEl) guidanceEl.textContent = guidance.text;
+      // Update guidance text
+      var guidance = getGuidance(userToQiblaAngle);
+      if (guidanceText) guidanceText.textContent = guidance.text;
 
-      // Update icon and color class
-      if (iconEl) {
-        iconEl.className = "guidance-icon guidance-" + guidance.level;
-        if (guidance.level === "exact") {
-          iconEl.innerHTML = '<i class="fa-solid fa-kaaba"></i>';
-        } else if (guidance.level === "opposite") {
-          iconEl.innerHTML = '<i class="fa-solid fa-rotate-left"></i>';
-        } else if (guidance.level === "close") {
-          iconEl.innerHTML =
-            diff > 0
-              ? '<i class="fa-solid fa-arrow-rotate-right"></i>'
-              : '<i class="fa-solid fa-arrow-rotate-left"></i>';
+      // Update guidance icon color based on alignment
+      if (guidanceIcon) {
+        guidanceIcon.className = 'guidance-icon guidance-' + guidance.level;
+        if (guidance.level === 'aligned') {
+          guidanceIcon.innerHTML = '<i class="fa-solid fa-kaaba"></i>';
+          // Haptic feedback when first aligned
+          if (!isAligned && navigator.vibrate) {
+            navigator.vibrate(50);
+            isAligned = true;
+          }
         } else {
-          iconEl.innerHTML =
-            diff > 0
-              ? '<i class="fa-solid fa-turn-right"></i>'
-              : '<i class="fa-solid fa-turn-left"></i>';
+          guidanceIcon.innerHTML = '<i class="fa-solid fa-compass"></i>';
+          isAligned = false;
         }
       }
+    }
+  };
 
-      // Haptic confirmation when aligned — fire once
-      if (guidance.level === "exact" && !alreadyConfirmed) {
-        alreadyConfirmed = true;
-        if (navigator.vibrate) navigator.vibrate([60, 40, 60]);
-      }
-      if (guidance.level !== "exact") {
-        alreadyConfirmed = false; // reset if they move away
-      }
-    };
-
-    window.addEventListener("deviceorientation", state.compassWatch, true);
-  }
-
-  if (
-    typeof DeviceOrientationEvent !== "undefined" &&
-    typeof DeviceOrientationEvent.requestPermission === "function"
-  ) {
+  // Request permission and start listening
+  if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+    // iOS
     DeviceOrientationEvent.requestPermission()
-      .then(function (perm) {
-        if (perm === "granted") requestAndStart();
-        else if (guidanceEl) guidanceEl.textContent = t("qiblaUnavailable");
+      .then(function(permissionState) {
+        if (permissionState === 'granted') {
+          window.addEventListener('deviceorientation', state.compassWatch, false);
+          if (guidanceText) guidanceText.textContent = state.lang === 'ar' ? 'جاري البحث...' : 'Searching...';
+        } else {
+          if (guidanceText) guidanceText.textContent = t("qiblaUnavailable");
+        }
       })
-      .catch(function () {
-        if (guidanceEl) guidanceEl.textContent = t("qiblaUnavailable");
+      .catch(function(error) {
+        console.error("Compass permission error:", error);
+        if (guidanceText) guidanceText.textContent = t("qiblaUnavailable");
       });
-  } else if (typeof DeviceOrientationEvent !== "undefined") {
-    requestAndStart();
+  } else if (typeof DeviceOrientationEvent !== 'undefined') {
+    // Android and other supported browsers
+    window.addEventListener('deviceorientation', state.compassWatch, false);
+    if (guidanceText) guidanceText.textContent = state.lang === 'ar' ? 'جاري البحث...' : 'Searching...';
   } else {
-    if (guidanceEl) guidanceEl.textContent = t("qiblaUnavailable");
+    // Browser doesn't support the API
+    if (guidanceText) guidanceText.textContent = t("qiblaUnavailable");
   }
 }
 
