@@ -1459,7 +1459,7 @@ function startCompass(qiblaBearingDeg) {
       return { text: lang === 'ar' ? 'اتجاه معاكس - استدر' : 'Opposite direction - turn around', level: 'opposite' };
     }
 
-    var direction = angleDiff > 0 ? (lang === 'ar' ? 'يسارًا' : 'left') : (lang === 'ar' ? 'يمينًا' : 'right');
+    var direction = angleDiff > 0 ? (lang === 'ar' ? 'يمينًا' : 'right') : (lang === 'ar' ? 'يسارًا' : 'left');
     var intensity = '';
 
     if (absDiff > 90) intensity = lang === 'ar' ? 'استدر ' : 'Turn ';
