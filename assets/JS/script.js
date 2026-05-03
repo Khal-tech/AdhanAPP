@@ -1618,14 +1618,13 @@ function chooseBgImage(
   maghribM,
   ishaM,
 ) {
-  if (currentMinutes <= fajrM + 30) return "assets/IMG/TIMES/fajr_time.png";
-  if (currentMinutes <= sunriseM + 30)
-    return "assets/IMG/TIMES/sunrise_time.png";
-  if (currentMinutes < dhuhrM + 75) return "assets/IMG/TIMES/dhuhr_time.png";
-  if (currentMinutes < asrM + 100) return "assets/IMG/TIMES/asr_time.png";
-  if (currentMinutes < maghribM - 10) return "assets/IMG/TIMES/sunset_time.png";
-  if (currentMinutes < ishaM - 40) return "assets/IMG/TIMES/maghrib_time.png";
-  return "assets/IMG/TIMES/isha_time.png";
+  if (currentMinutes <= fajrM + 30) return "assets/IMG/TIMES/fajrTime.avif";
+  if (currentMinutes <= sunriseM + 30) return "assets/IMG/TIMES/sunriseTime.avif";
+  if (currentMinutes < dhuhrM + 75) return "assets/IMG/TIMES/dhuhrTime.avif";
+  if (currentMinutes < asrM + 100) return "assets/IMG/TIMES/asrTime.avif";
+  if (currentMinutes < maghribM - 10) return "assets/IMG/TIMES/sunsetTime.avif";
+  if (currentMinutes < ishaM - 40) return "assets/IMG/TIMES/maghribTime.avif";
+  return "assets/IMG/TIMES/ishaTime.avif";
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
