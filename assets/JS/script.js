@@ -37,7 +37,7 @@ var T = {
   en: {
     prayerTimesOf: "Prayer Times Of",
     timeNowIs: "Time now is",
-    nextIs: "Next prayer is",
+    nextIs: "Next is",
     timeToPrayer: "Time to prayer:",
     fajr: "Fajr",
     churuq: "Churuq",
@@ -125,7 +125,7 @@ var T = {
   ar: {
     prayerTimesOf: "أوقات الصلاة في",
     timeNowIs: "الوقت الحالي",
-    nextIs: "الصلاة التالية",
+    nextIs: "القادمة",
     timeToPrayer: "الوقت المتبقي:",
     fajr: "الفجر",
     churuq: "الشروق",
@@ -1368,33 +1368,65 @@ function openQibla() {
     openPlaceholder(t("qibla"));
     return;
   }
+
   var bearing = qiblaBearing(
     parseFloat(state.geoData.latitude),
     parseFloat(state.geoData.longitude),
   );
-  var bearingFixed = bearing.toFixed(1);
 
   var html =
     '<div class="qibla-wrap">' +
+    // Bearing number + label
     '<div class="qibla-bearing-info">' +
     '<span class="qibla-degrees">' +
-    bearingFixed +
+    bearing.toFixed(1) +
     "°</span>" +
     '<span class="qibla-bearing-label">' +
     t("qiblaBearing") +
     "</span>" +
     "</div>" +
-    '<div class="qibla-compass-ring">' +
-    '<div class="qibla-compass" id="qiblaCompass">' +
-    '<div class="compass-north">N</div>' +
-    '<div class="compass-arrow" id="qiblaArrow">' +
-    '<i class="fa-solid fa-location-arrow"></i>' +
+    // Compass ring — ring rotates with phone, arrow stays fixed pointing to Mecca
+    '<div class="qibla-compass-ring" id="qiblaRing">' +
+    // Cardinal labels — rotate WITH the ring
+    '<div class="compass-cardinal compass-N">N</div>' +
+    '<div class="compass-cardinal compass-E">E</div>' +
+    '<div class="compass-cardinal compass-S">S</div>' +
+    '<div class="compass-cardinal compass-W">W</div>' +
+    // Tick marks ring
+    '<div class="compass-ticks">' +
+    (function () {
+      var ticks = "";
+      for (var i = 0; i < 72; i++) {
+        var major = i % 9 === 0;
+        ticks +=
+          '<div class="compass-tick' +
+          (major ? " major" : "") +
+          '" style="transform:rotate(' +
+          i * 5 +
+          'deg)"></div>';
+      }
+      return ticks;
+    })() +
     "</div>" +
-    '<div class="compass-kaaba"><i class="fa-solid fa-kaaba"></i></div>' +
+    // Qibla arrow — FIXED, always points toward Mecca
+    // Rotated by bearing from North; ring rotates around it
+    '<div class="qibla-needle" id="qiblaNeedle">' +
+    '<div class="needle-kaaba"><i class="fa-solid fa-kaaba"></i></div>' +
+    '<div class="needle-shaft"></div>' +
+    '<div class="needle-tail"></div>' +
     "</div>" +
     "</div>" +
-    '<div class="qibla-status" id="qiblaStatus">' +
-    '<button class="qibla-perm-btn" id="qiblaPermBtn"><i class="fa-solid fa-compass"></i> ' +
+    // Guidance text — updates live
+    '<div class="qibla-guidance" id="qiblaGuidance">' +
+    '<div class="guidance-icon" id="guidanceIcon"><i class="fa-solid fa-compass"></i></div>' +
+    '<div class="guidance-text" id="guidanceText">' +
+    t("qiblaPermission") +
+    "</div>" +
+    "</div>" +
+    // Permission button (hidden once live)
+    '<div id="qiblaStatusWrap">' +
+    '<button class="qibla-perm-btn" id="qiblaPermBtn">' +
+    '<i class="fa-solid fa-compass"></i> ' +
     t("qiblaPermission") +
     "</button>" +
     "</div>" +
@@ -1403,13 +1435,17 @@ function openQibla() {
   openModal(t("qibla"), html);
   state.qiblaActive = true;
 
+  // Point the needle at Mecca from the start (static bearing, no heading yet)
+  var needle = document.getElementById("qiblaNeedle");
+  if (needle) needle.style.transform = "rotate(" + bearing + "deg)";
+
   document
     .getElementById("qiblaPermBtn")
     .addEventListener("click", function () {
       startCompass(bearing);
     });
 
-  // Auto-start on Android (no permission needed)
+  // Android — auto-start, no permission needed
   if (
     typeof DeviceOrientationEvent !== "undefined" &&
     typeof DeviceOrientationEvent.requestPermission !== "function"
@@ -1419,20 +1455,122 @@ function openQibla() {
 }
 
 function startCompass(qiblaBearingDeg) {
-  var statusEl = document.getElementById("qiblaStatus");
-  var arrowEl = document.getElementById("qiblaArrow");
+  var ring = document.getElementById("qiblaRing");
+  var needle = document.getElementById("qiblaNeedle");
+  var guidanceEl = document.getElementById("guidanceText");
+  var iconEl = document.getElementById("guidanceIcon");
+  var statusWrap = document.getElementById("qiblaStatusWrap");
+  var alreadyConfirmed = false;
+
+  // Guidance logic — how many degrees off are they?
+  function getGuidance(diff) {
+    // diff: signed angle, negative = turn left, positive = turn right
+    var abs = Math.abs(diff);
+    var isAr = state.lang === "ar";
+
+    if (abs <= 10) {
+      return {
+        text: isAr ? "✓ أنت تواجه القبلة" : "✓ You are facing the Qibla",
+        level: "exact",
+      };
+    }
+    if (abs >= 160) {
+      return {
+        text: isAr
+          ? "أنت في الاتجاه المعاكس تماماً — استدر"
+          : "Opposite direction — turn around",
+        level: "opposite",
+      };
+    }
+
+    var dir, intensity;
+    if (diff > 0) {
+      dir = isAr ? "يميناً" : "right";
+    } else {
+      dir = isAr ? "يساراً" : "left";
+    }
+
+    if (abs > 45) {
+      intensity = isAr ? "استدر " : "Turn ";
+    } else if (abs > 20) {
+      intensity = isAr ? "قليلاً إلى " : "A little to the ";
+    } else {
+      intensity = isAr ? "بشكل طفيف إلى " : "Slightly to the ";
+    }
+
+    var degsText = isAr
+      ? " (" + Math.round(abs) + "°)"
+      : " (" + Math.round(abs) + "°)";
+
+    return {
+      text: intensity + dir + degsText,
+      level: abs > 45 ? "far" : "close",
+    };
+  }
 
   function requestAndStart() {
+    if (statusWrap) statusWrap.style.display = "none";
+
     state.compassWatch = function (e) {
-      var heading = e.webkitCompassHeading || (e.alpha ? 360 - e.alpha : null);
-      if (heading === null) return;
-      var rotation = qiblaBearingDeg - heading;
-      if (arrowEl) arrowEl.style.transform = "rotate(" + rotation + "deg)";
+      var heading =
+        e.webkitCompassHeading != null
+          ? e.webkitCompassHeading
+          : e.alpha != null
+            ? 360 - e.alpha
+            : null;
+      if (heading === null || heading === undefined) return;
+
+      // Ring rotates with the phone so cardinal points track reality
+      // (ring counter-rotates by heading so N label always faces world North)
+      if (ring) ring.style.setProperty("--ring-rotation", -heading + "deg");
+
+      // Needle lives INSIDE the rotating ring.
+      // Ring applies: -heading. To point at fixed world bearing (Qibla):
+      // needle transform = qiblaBearing - (-heading) = qiblaBearing + heading
+      if (needle)
+        needle.style.transform =
+          "rotate(" + (qiblaBearingDeg + heading) + "deg)";
+
+      // How far off is the user from Qibla?
+      var diff = qiblaBearingDeg - heading;
+      // Normalize to -180 → +180
+      while (diff > 180) diff -= 360;
+      while (diff < -180) diff += 360;
+
+      var guidance = getGuidance(diff);
+      if (guidanceEl) guidanceEl.textContent = guidance.text;
+
+      // Update icon and color class
+      if (iconEl) {
+        iconEl.className = "guidance-icon guidance-" + guidance.level;
+        if (guidance.level === "exact") {
+          iconEl.innerHTML = '<i class="fa-solid fa-kaaba"></i>';
+        } else if (guidance.level === "opposite") {
+          iconEl.innerHTML = '<i class="fa-solid fa-rotate-left"></i>';
+        } else if (guidance.level === "close") {
+          iconEl.innerHTML =
+            diff > 0
+              ? '<i class="fa-solid fa-arrow-rotate-right"></i>'
+              : '<i class="fa-solid fa-arrow-rotate-left"></i>';
+        } else {
+          iconEl.innerHTML =
+            diff > 0
+              ? '<i class="fa-solid fa-turn-right"></i>'
+              : '<i class="fa-solid fa-turn-left"></i>';
+        }
+      }
+
+      // Haptic confirmation when aligned — fire once
+      if (guidance.level === "exact" && !alreadyConfirmed) {
+        alreadyConfirmed = true;
+        if (navigator.vibrate) navigator.vibrate([60, 40, 60]);
+      }
+      if (guidance.level !== "exact") {
+        alreadyConfirmed = false; // reset if they move away
+      }
     };
+
     window.addEventListener("deviceorientation", state.compassWatch, true);
-    if (statusEl)
-      statusEl.innerHTML =
-        '<span class="qibla-live"><i class="fa-solid fa-circle" style="color:#5a8c84"></i> Live</span>';
   }
 
   if (
@@ -1442,15 +1580,15 @@ function startCompass(qiblaBearingDeg) {
     DeviceOrientationEvent.requestPermission()
       .then(function (perm) {
         if (perm === "granted") requestAndStart();
-        else if (statusEl) statusEl.textContent = t("qiblaUnavailable");
+        else if (guidanceEl) guidanceEl.textContent = t("qiblaUnavailable");
       })
       .catch(function () {
-        if (statusEl) statusEl.textContent = t("qiblaUnavailable");
+        if (guidanceEl) guidanceEl.textContent = t("qiblaUnavailable");
       });
   } else if (typeof DeviceOrientationEvent !== "undefined") {
     requestAndStart();
   } else {
-    if (statusEl) statusEl.textContent = t("qiblaUnavailable");
+    if (guidanceEl) guidanceEl.textContent = t("qiblaUnavailable");
   }
 }
 
@@ -1480,14 +1618,14 @@ function chooseBgImage(
   maghribM,
   ishaM,
 ) {
-  if (currentMinutes <= fajrM + 30) return "assets/IMG/TIMES/fajrTime.avif";
+  if (currentMinutes <= fajrM + 30) return "assets/IMG/TIMES/fajr_time.png";
   if (currentMinutes <= sunriseM + 30)
-    return "assets/IMG/TIMES/sunriseTime.avif";
-  if (currentMinutes < dhuhrM + 75) return "assets/IMG/TIMES/dhuhrTime.avif";
-  if (currentMinutes < asrM + 100) return "assets/IMG/TIMES/asrTime.avif";
-  if (currentMinutes < maghribM - 10) return "assets/IMG/TIMES/sunsetTime.avif";
-  if (currentMinutes < ishaM - 40) return "assets/IMG/TIMES/maghribTime.avif";
-  return "assets/IMG/TIMES/ishaTime.avif";
+    return "assets/IMG/TIMES/sunrise_time.png";
+  if (currentMinutes < dhuhrM + 75) return "assets/IMG/TIMES/dhuhr_time.png";
+  if (currentMinutes < asrM + 100) return "assets/IMG/TIMES/asr_time.png";
+  if (currentMinutes < maghribM - 10) return "assets/IMG/TIMES/sunset_time.png";
+  if (currentMinutes < ishaM - 40) return "assets/IMG/TIMES/maghrib_time.png";
+  return "assets/IMG/TIMES/isha_time.png";
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -1606,19 +1744,11 @@ function tick() {
   changeBg(wrapperBackground, "currentBg", bg);
   changeBg(imgEl, "currentImgBg", bg);
 
-  // Highlight current active prayer in list
-  var activePrayer;
-  if (currentMinutes < fajrM) activePrayer = "fajr";
-  else if (currentMinutes < dhuhrM) activePrayer = "dhuhr";
-  else if (currentMinutes < asrM) activePrayer = "asr";
-  else if (currentMinutes < maghribM) activePrayer = "maghrib";
-  else if (currentMinutes < ishaM) activePrayer = "isha";
-  else activePrayer = "fajr";
-
+  // Highlight the NEXT prayer row (the one coming up)
   document.querySelectorAll(".prayer").forEach(function (li) {
     li.classList.toggle(
       "active-prayer",
-      li.getAttribute("data-prayer") === activePrayer,
+      li.getAttribute("data-prayer") === nextName,
     );
   });
 }
