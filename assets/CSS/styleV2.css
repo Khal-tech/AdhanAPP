@@ -677,224 +677,109 @@
 }
 
 /* ══════════════════════════════════════════════════════════════
-   QIBLA COMPASS — Guided v2
+   QIBLA COMPASS — CORRECTED STYLES
 ══════════════════════════════════════════════════════════════ */
-.qibla-wrap {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-    padding: .5rem 0;
+.qibla-compass-container {
+  position: relative;
+  width: 250px;
+  height: 250px;
+  margin: 1rem auto;
 }
 
-/* Bearing number */
-.qibla-bearing-info { text-align: center; }
-.qibla-degrees {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 2.2rem;
-    color: var(--ink);
-    font-weight: 300;
-    display: block;
-    line-height: 1;
-}
-.qibla-bearing-label {
-    font-size: .68rem;
-    color: var(--text-muted);
-    letter-spacing: .07em;
-    font-family: 'Cinzel', serif;
-    text-transform: uppercase;
+.qibla-compass-rose {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 2px solid rgba(90, 140, 132, 0.3);
+  background: radial-gradient(ellipse at center, rgba(250, 246, 240, 0.7) 40%, rgba(240, 235, 225, 0.4) 100%);
+  position: relative;
+  transition: transform 0.1s linear;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.05) inset;
 }
 
-/* ── Compass ring ───────────────────────────────────────────── */
-.qibla-compass-ring {
-    position: relative;
-    width: 230px;
-    height: 230px;
-    border-radius: 50%;
-
-    /* Ring rotates via CSS variable set by JS */
-    transform: rotate(var(--ring-rotation, 0deg));
-    transition: transform .08s linear;
-
-    /* Outer border */
-    border: 2px solid rgba(90, 140, 132, 0.22);
-    background: radial-gradient(
-        ellipse at center,
-        rgba(250, 246, 240, 0.5) 0%,
-        rgba(240, 235, 225, 0.2) 100%
-    );
-}
-
-/* Cardinal labels — inside the rotating ring */
+/* Cardinal points on the rose */
 .compass-cardinal {
-    position: absolute;
-    font-family: 'Cinzel', serif;
-    font-size: .65rem;
-    font-weight: 500;
-    color: var(--text-muted);
-    letter-spacing: .05em;
-    /* center each label */
-    width: 20px;
-    text-align: center;
-    margin-left: -10px;
-    margin-top: -8px;
+  position: absolute;
+  font-family: 'Cinzel', serif;
+  font-size: 0.7rem;
+  font-weight: bold;
+  color: var(--text-muted);
+  text-shadow: 0 0 2px white;
 }
-.compass-N { top: 10px;  left: 50%; color: var(--terr); }
-.compass-S { bottom: 10px; left: 50%; }
-.compass-E { right: 10px; top: 50%; margin-left: 0; margin-top: -8px; }
-.compass-W { left: 10px;  top: 50%; margin-left: -2px; margin-top: -8px; }
+.compass-n { top: 8px; left: 50%; transform: translateX(-50%); color: var(--terr); }
+.compass-e { top: 50%; right: 8px; transform: translateY(-50%); }
+.compass-s { bottom: 8px; left: 50%; transform: translateX(-50%); }
+.compass-w { top: 50%; left: 8px; transform: translateY(-50%); }
 
-/* Tick marks */
-.compass-ticks {
-    position: absolute;
-    inset: 0;
-    border-radius: 50%;
-}
-.compass-tick {
-    position: absolute;
-    top: 0;
-    left: 50%;
-    width: 1px;
-    height: 6px;
-    background: rgba(90, 140, 132, 0.20);
-    transform-origin: bottom center;
-    margin-left: -.5px;
-    /* Each tick is positioned at top of circle, rotated around center */
-    transform-origin: 0.5px 115px;
-}
-.compass-tick.major {
-    height: 10px;
-    width: 1.5px;
-    background: rgba(90, 140, 132, 0.40);
-}
-
-/* ── Qibla needle — does NOT rotate with the ring ───────────── */
-/* It sits on top of the ring in a counter-rotated wrapper      */
+/* The needle - fixed in place, points to Mecca */
 .qibla-needle {
-    position: absolute;
-    inset: 0;
-    border-radius: 50%;
-    /* Counter-rotate so needle stays fixed while ring spins */
-    transform: rotate(calc(-1 * var(--ring-rotation, 0deg)));
-    /* JS sets the actual bearing on this element directly */
-    /* The ring rotation is on the parent, needle un-does it   */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    pointer-events: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  transition: transform 0.2s ease-out;
 }
-
-/* The needle is a vertical line with Kaaba at tip */
-.needle-shaft {
-    position: absolute;
-    width: 3px;
-    border-radius: 2px;
-    /* Top half — points toward Mecca */
-    height: 70px;
-    bottom: 50%;
-    left: 50%;
-    margin-left: -1.5px;
-    background: linear-gradient(to top, var(--teal2), var(--teal));
-    transform-origin: bottom center;
+.needle-head, .needle-tail {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: 2px solid transparent;
+  border-right: 2px solid transparent;
+}
+.needle-head {
+  top: 15px;
+  width: 0;
+  height: 0;
+  border-bottom: 70px solid var(--teal2);
+}
+.needle-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 16px;
+  height: 16px;
+  background: var(--ivory);
+  border: 2px solid var(--teal2);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  z-index: 10;
 }
 .needle-tail {
-    position: absolute;
-    width: 3px;
-    border-radius: 2px;
-    /* Bottom half — opposite direction */
-    height: 40px;
-    top: 50%;
-    left: 50%;
-    margin-left: -1.5px;
-    background: linear-gradient(to bottom, rgba(90,140,132,0.4), transparent);
-    transform-origin: top center;
-}
-/* Center dot */
-.needle-shaft::after {
-    content: '';
-    position: absolute;
-    bottom: -5px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 11px;
-    height: 11px;
-    border-radius: 50%;
-    background: var(--teal);
-    border: 2px solid white;
-    box-shadow: 0 0 6px rgba(90,140,132,0.4);
+  top: 85px;
+  width: 0;
+  height: 0;
+  border-top: 40px solid rgba(90, 140, 132, 0.5);
 }
 
-/* Kaaba icon at the top of the needle */
-.needle-kaaba {
-    position: absolute;
-    bottom: calc(50% + 72px);
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 1.1rem;
-    color: var(--gold);
-    filter: drop-shadow(0 1px 4px rgba(184,130,26,0.4));
-    line-height: 1;
-}
-
-/* ── Guidance text ──────────────────────────────────────────── */
+/* Guidance styles */
 .qibla-guidance {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: .4rem;
-    min-height: 60px;
-    text-align: center;
-    padding: 0 1rem;
+  text-align: center;
+  margin: 1rem 0;
+  min-height: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
-
 .guidance-icon {
-    font-size: 1.6rem;
-    transition: color .3s;
+  font-size: 1.8rem;
+  margin-bottom: 0.5rem;
+  transition: color 0.3s ease;
 }
-.guidance-icon.guidance-exact    { color: var(--teal);  }
-.guidance-icon.guidance-close    { color: var(--gold2); }
-.guidance-icon.guidance-far      { color: var(--terr);  }
-.guidance-icon.guidance-opposite { color: var(--terr);  }
-
+.guidance-icon.guidance-aligned { color: var(--teal); }
+.guidance-icon.guidance-opposite { color: var(--terr); }
+.guidance-icon.guidance-adjusting { color: var(--gold); }
 .guidance-text {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.1rem;
-    font-weight: 400;
-    color: var(--ink2);
-    line-height: 1.4;
-    transition: color .3s;
-    min-height: 1.5rem;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.1rem;
+  color: var(--ink2);
 }
 
-/* When aligned — green confirmation */
-.guidance-icon.guidance-exact + .guidance-text,
-.guidance-text:has(+ .guidance-exact) {
-    color: var(--teal);
-    font-weight: 500;
-}
-
-/* ── Permission button ──────────────────────────────────────── */
-.qibla-perm-btn {
-    padding: .62rem 1.3rem;
-    border-radius: 8px;
-    border: 1px solid rgba(90, 140, 132, 0.25);
-    background: rgba(90, 140, 132, 0.08);
-    color: var(--text-teal);
-    cursor: pointer;
-    font-family: 'Cinzel', serif;
-    font-size: .78rem;
-    display: flex;
-    align-items: center;
-    gap: .4rem;
-    transition: all .2s;
-}
-.qibla-perm-btn:hover { background: rgba(90, 140, 132, 0.16); }
-.qibla-live {
-    font-size: .76rem;
-    color: var(--text-teal);
-    display: flex;
-    align-items: center;
-    gap: .35rem;
+.qibla-permission-wrap {
+  margin-top: 1rem;
 }
 
 /* ══════════════════════════════════════════════════════════════
