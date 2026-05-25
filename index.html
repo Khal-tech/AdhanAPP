@@ -11,6 +11,24 @@
     <link rel="stylesheet" href="assets/CSS/style.css">
     <link rel="stylesheet" href="assets/CSS/styleLoader.css">
     <link rel="stylesheet" href="assets/CSS/styleV2.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Tajawal:wght@200;300;400;500;700;800;900&display=swap" rel="stylesheet">
+    <link href="assets/FONTS/Tajawal-Black.ttf" rel="stylesheet">
+    <link href="assets/FONTS/Tajawal-Regular.ttf" rel="stylesheet">
+    <link href="assets/FONTS/Tajawal-Medium.ttf" rel="stylesheet">
+    <link href="assets/FONTS/Tajawal-Bold.ttf" rel="stylesheet">
+    <style>
+        body, h1, h2, h3, p, a, span, div, li, td {                
+            font-family: "Montserrat", sans-serif !important;
+            font-weight: normal !important;
+            font-style: normal !important;
+        }     
+    </style>
+    <style>
+    </style>
 </head>
 <body>
 
@@ -196,8 +214,8 @@
             <div class="timeInfos">
                 <div id="img" class="img changeableBG">
                     <div class="temporalInfo">
-                        <h3><span class="cal-label" data-i18n="miladi">MILADI</span> <span id="miladiCal"></span></h3>
-                        <h3><span class="cal-label" data-i18n="hijri">HIJRI</span> <span id="hijriCal"></span></h3>
+                        <h3><span class="cal-label miladiHijri" data-i18n="miladi">MILADI</span> <span id="miladiCal"></span></h3>
+                        <h3><span class="cal-label miladiHijri" data-i18n="hijri">HIJRI</span> <span id="hijriCal"></span></h3>
                     </div>
                 </div>
             </div>
@@ -254,107 +272,105 @@
 
                 <!-- RIGHT -->
                 <div class="right">
-                    <div class="calendar-section" id="hijriCalWidget"></div>
+                    <div class="calendar-section" id="hijriCalWidget" style="font-family: 'Montserrat', sans-serif;"></div>
                     <hr class="section-divider">
-                    <div class="featureSection">
+                    <div class="featureSection" style="position: relative;">
 
-                        <div class="features">
-                            <div class="featureButton">
-                                <button data-feature="quran">
-                                    <i class="fa-solid fa-book-quran"></i>
-                                    <span data-i18n="quran">Quran</span>
-                                </button>
-                            </div>
-                            <div class="featureButton">
-                                <button data-feature="wakeDhikr">
-                                    <i class="fa-solid fa-sun-plant-wilt"></i>
-                                    <span data-i18n="wakeDhikr">Wake Dhikr</span>
-                                </button>
-                            </div>
-                            <div class="featureButton">
-                                <button data-feature="morningDhikr">
-                                    <i class="fa-solid fa-cloud-sun"></i>
-                                    <span data-i18n="morningDhikr">Morning Dhikr</span>
-                                </button>
-                            </div>
-                            <div class="featureButton">
-                                <button data-feature="eveningDhikr">
-                                    <i class="fa-solid fa-cloud-moon"></i>
-                                    <span data-i18n="eveningDhikr">Evening Dhikr</span>
-                                </button>
-                            </div>
-                            <div class="featureButton">
-                                <button data-feature="nightDhikr">
-                                    <i class="fa-solid fa-moon"></i>
-                                    <span data-i18n="nightDhikr">Night Dhikr</span>
-                                </button>
-                            </div>
-                        </div>
+                        <div class="wrap-features" style="position: absolute; top: 0.0rem;">
+                            <div class="features">
+                                <div class="featureButton">
+                                    <button data-feature="quran">
+                                        <i class="fa-solid fa-book-quran"></i>
+                                        <span data-i18n="quran">Quran</span>
+                                    </button>
+                                </div>
+                                <div class="featureButton">
+                                    <button data-feature="wakeDhikr">
+                                        <i class="fa-solid fa-sun-plant-wilt"></i>
+                                        <span data-i18n="wakeDhikr">Wake Dhikr</span>
+                                    </button>
+                                </div>
+                                <div class="featureButton">
+                                    <button data-feature="morningDhikr">
+                                        <i class="fa-solid fa-cloud-sun"></i>
+                                        <span data-i18n="morningDhikr">Morning Dhikr</span>
+                                    </button>
+                                </div>
+                                <div class="featureButton">
+                                    <button data-feature="eveningDhikr">
+                                        <i class="fa-solid fa-cloud-moon"></i>
+                                        <span data-i18n="eveningDhikr">Evening Dhikr</span>
+                                    </button>
+                                </div>
+                                <div class="featureButton">
+                                    <button data-feature="nightDhikr">
+                                        <i class="fa-solid fa-moon"></i>
+                                        <span data-i18n="nightDhikr">Night Dhikr</span>
+                                    </button>
+                                </div>
+                            
+                                <div class="featureButton">
+                                    <button data-feature="sleepingDhikr">
+                                        <i class="fa-solid fa-bed"></i>
+                                        <span data-i18n="sleepingDhikr">Sleeping Dhikr</span>
+                                    </button>
+                                </div>
+                                <div class="featureButton">
+                                    <button data-feature="tasbih">
+                                        <i class="fa-solid fa-circle-dot"></i>
+                                        <span data-i18n="tasbih">Tasbih</span>
+                                    </button>
+                                </div>
+                                <div class="featureButton">
+                                    <button data-feature="hijriCalendar">
+                                        <i class="fa-solid fa-calendar-days"></i>
+                                        <span data-i18n="hijriCal">Hijri Cal</span>
+                                    </button>
+                                </div>
+                                <div class="featureButton">
+                                    <button data-feature="asmaUlHusna">
+                                        <i class="fa-solid fa-star-and-crescent"></i>
+                                        <span data-i18n="asmaUlHusna">99 Names</span>
+                                    </button>
+                                </div>
+                                <div class="featureButton">
+                                    <button data-feature="duaOfDay">
+                                        <i class="fa-solid fa-hands-praying"></i>
+                                        <span data-i18n="duaOfDay">Dua</span>
+                                    </button>
+                                </div>
 
-                        <div class="features">
-                            <div class="featureButton">
-                                <button data-feature="sleepingDhikr">
-                                    <i class="fa-solid fa-bed"></i>
-                                    <span data-i18n="sleepingDhikr">Sleeping Dhikr</span>
-                                </button>
-                            </div>
-                            <div class="featureButton">
-                                <button data-feature="tasbih">
-                                    <i class="fa-solid fa-circle-dot"></i>
-                                    <span data-i18n="tasbih">Tasbih</span>
-                                </button>
-                            </div>
-                            <div class="featureButton">
-                                <button data-feature="hijriCalendar">
-                                    <i class="fa-solid fa-calendar-days"></i>
-                                    <span data-i18n="hijriCal">Hijri Cal</span>
-                                </button>
-                            </div>
-                            <div class="featureButton">
-                                <button data-feature="asmaUlHusna">
-                                    <i class="fa-solid fa-star-and-crescent"></i>
-                                    <span data-i18n="asmaUlHusna">99 Names</span>
-                                </button>
-                            </div>
-                            <div class="featureButton">
-                                <button data-feature="duaOfDay">
-                                    <i class="fa-solid fa-hands-praying"></i>
-                                    <span data-i18n="duaOfDay">Dua</span>
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="features">
-                            <div class="featureButton">
-                                <button data-feature="sunnahTimes">
-                                    <i class="fa-solid fa-sun"></i>
-                                    <span data-i18n="sunnahTimes">Sunnah</span>
-                                </button>
-                            </div>
-                            <div class="featureButton">
-                                <button data-feature="qiyam">
-                                    <i class="fa-solid fa-star"></i>
-                                    <span data-i18n="qiyam">Qiyam</span>
-                                </button>
-                            </div>
-                            <div class="featureButton">
-                                <button data-feature="hadith">
-                                    <i class="fa-solid fa-scroll"></i>
-                                    <span data-i18n="hadith">Hadith</span>
-                                </button>
-                            </div>
-                            <div class="featureButton">
-                                <button data-feature="donation">
-                                    <i class="fa-solid fa-heart"></i>
-                                    <span data-i18n="donation">Support</span>
-                                </button>
-                            </div>
-                            <!-- Qibla: hidden on desktop via CSS, shown on mobile/tablet -->
-                            <div class="featureButton qibla-only">
-                                <button data-feature="qibla">
-                                    <i class="fa-solid fa-compass"></i>
-                                    <span data-i18n="qibla">Qibla</span>
-                                </button>
+                                <div class="featureButton">
+                                    <button data-feature="sunnahTimes">
+                                        <i class="fa-solid fa-sun"></i>
+                                        <span data-i18n="sunnahTimes">Sunnah</span>
+                                    </button>
+                                </div>
+                                <div class="featureButton">
+                                    <button data-feature="qiyam">
+                                        <i class="fa-solid fa-star"></i>
+                                        <span data-i18n="qiyam">Qiyam</span>
+                                    </button>
+                                </div>
+                                <div class="featureButton">
+                                    <button data-feature="hadith">
+                                        <i class="fa-solid fa-scroll"></i>
+                                        <span data-i18n="hadith">Hadith</span>
+                                    </button>
+                                </div>
+                                <div class="featureButton">
+                                    <button data-feature="donation">
+                                        <i class="fa-solid fa-heart"></i>
+                                        <span data-i18n="donation">Support</span>
+                                    </button>
+                                </div>
+                                <!-- Qibla: hidden on desktop via CSS, shown on mobile/tablet -->
+                                <div class="featureButton qibla-only">
+                                    <button data-feature="qibla">
+                                        <i class="fa-solid fa-compass"></i>
+                                        <span data-i18n="qibla">Qibla</span>
+                                    </button>
+                                </div>
                             </div>
                         </div>
 
