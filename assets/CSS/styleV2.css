@@ -677,74 +677,110 @@
 }
 
 /* ══════════════════════════════════════════════════════════════
-   QIBLA COMPASS
+   QIBLA COMPASS — CORRECTED STYLES
 ══════════════════════════════════════════════════════════════ */
-.qibla-wrap { display: flex; flex-direction: column; align-items: center; gap: 1.1rem; padding: .5rem 0; }
-.qibla-bearing-info { text-align: center; }
-.qibla-degrees {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 2.4rem;
-    color: var(--ink);
-    font-weight: 300;
-    display: block;
+.qibla-compass-container {
+  position: relative;
+  width: 250px;
+  height: 250px;
+  margin: 1rem auto;
 }
-.qibla-bearing-label { font-size: .70rem; color: var(--text-muted); letter-spacing: .06em; font-family: 'Cinzel', serif; }
-.qibla-compass-ring {
-    width: 210px; height: 210px;
-    border-radius: 50%;
-    border: 2px solid rgba(90, 140, 132, 0.20);
-    background: radial-gradient(ellipse at center, rgba(90,140,132,0.06), transparent);
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+
+.qibla-compass-rose {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 2px solid rgba(90, 140, 132, 0.3);
+  background: radial-gradient(ellipse at center, rgba(250, 246, 240, 0.7) 40%, rgba(240, 235, 225, 0.4) 100%);
+  position: relative;
+  transition: transform 0.1s linear;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.05) inset;
 }
-.qibla-compass { position: relative; width: 100%; height: 100%; }
-.compass-north {
-    position: absolute;
-    top: 8px; left: 50%;
-    transform: translateX(-50%);
-    font-family: 'Cinzel', serif;
-    font-size: .68rem;
-    color: var(--text-muted);
+
+/* Cardinal points on the rose */
+.compass-cardinal {
+  position: absolute;
+  font-family: 'Cinzel', serif;
+  font-size: 0.7rem;
+  font-weight: bold;
+  color: var(--text-muted);
+  text-shadow: 0 0 2px white;
 }
-.compass-arrow {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.7rem;
-    color: var(--teal2);
-    transition: transform .1s linear;
+.compass-n { top: 8px; left: 50%; transform: translateX(-50%); color: var(--terr); }
+.compass-e { top: 50%; right: 8px; transform: translateY(-50%); }
+.compass-s { bottom: 8px; left: 50%; transform: translateX(-50%); }
+.compass-w { top: 50%; left: 8px; transform: translateY(-50%); }
+
+/* The needle - fixed in place, points to Mecca */
+.qibla-needle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  transition: transform 0.2s ease-out;
 }
-.compass-kaaba {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.1rem;
-    color: var(--gold2);
-    opacity: .28;
+.needle-head, .needle-tail {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: 2px solid transparent;
+  border-right: 2px solid transparent;
 }
-.qibla-status { text-align: center; }
-.qibla-perm-btn {
-    padding: .62rem 1.3rem;
-    border-radius: 8px;
-    border: 1px solid rgba(90, 140, 132, 0.25);
-    background: rgba(90, 140, 132, 0.08);
-    color: var(--text-teal);
-    cursor: pointer;
-    font-family: 'Cinzel', serif;
-    font-size: .78rem;
-    display: flex;
-    align-items: center;
-    gap: .4rem;
-    transition: all .2s;
+.needle-head {
+  top: 15px;
+  width: 0;
+  height: 0;
+  border-bottom: 70px solid var(--teal2);
 }
-.qibla-perm-btn:hover { background: rgba(90, 140, 132, 0.16); }
-.qibla-live { font-size: .76rem; color: var(--text-teal); display: flex; align-items: center; gap: .35rem; }
+.needle-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 16px;
+  height: 16px;
+  background: var(--ivory);
+  border: 2px solid var(--teal2);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+}
+.needle-tail {
+  top: 85px;
+  width: 0;
+  height: 0;
+  border-top: 40px solid rgba(90, 140, 132, 0.5);
+}
+
+/* Guidance styles */
+.qibla-guidance {
+  text-align: center;
+  margin: 1rem 0;
+  min-height: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.guidance-icon {
+  font-size: 1.8rem;
+  margin-bottom: 0.5rem;
+  transition: color 0.3s ease;
+}
+.guidance-icon.guidance-aligned { color: var(--teal); }
+.guidance-icon.guidance-opposite { color: var(--terr); }
+.guidance-icon.guidance-adjusting { color: var(--gold); }
+.guidance-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.1rem;
+  color: var(--ink2);
+}
+
+.qibla-permission-wrap {
+  margin-top: 1rem;
+}
 
 /* ══════════════════════════════════════════════════════════════
    DONATION

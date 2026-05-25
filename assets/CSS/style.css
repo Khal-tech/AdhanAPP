@@ -13,58 +13,65 @@
 ══════════════════════════════════════════════════════════════ */
 :root {
     /* Palette — mirrors styleLoader.css */
-    --ivory:        #faf6f0;
-    --cream:        #f3ece0;
-    --teal:         #5a8c84;
-    --teal2:        #7aada4;
-    --teal3:        #a8cdc8;
-    --gold:         #b8821a;
-    --gold2:        #c8920e;
-    --gold3:        #e8c97a;
-    --terr:         #8b3a1a;
-    --ink:          #1e1510;
-    --ink2:         #3d2e20;
-    --ink3:         #5a4535;
-    --muted:        #7a6855;
-    --soft:         #b0a090;
+    --ivory: #faf6f0;
+    --cream: #f3ece0;
+    --teal: #5a8c84;
+    --teal2: #7aada4;
+    --teal3: #a8cdc8;
+    --gold: #fbaf22;
+    --gold2: #f0b111;
+    --gold3: #ffd56a;
+    --terr: #8b3a1a;
+    --ink: #1e1510;
+    --ink2: #3d2e20;
+    --ink3: #5a4535;
+    --muted: #7a6855;
+    --soft: #b0a090;
 
     /* Light glass system — warm ivory at ~45% */
-    --glass-panel:  rgba(250, 246, 240, 0.46);
-    --glass-header: rgba(245, 240, 232, 0.52);
-    --glass-border: rgba(90, 140, 132, 0.20);
-    --glass-hover:  rgba(90, 140, 132, 0.10);
+    --glass-panel: rgba(250, 246, 240, 0.795);
+    --glass-header: rgba(245, 240, 232, 0.795);
+    --glass-border: rgba(90, 140, 132, 0.01);
+    --glass-hover: rgba(90, 140, 132, 0.05);
     --glass-active: rgba(90, 140, 132, 0.18);
-    --glass-row:    rgba(250, 246, 240, 0.30);
+    --glass-row: rgba(250, 246, 240, 0.20);
 
     /* Text — dark ink, never white */
-    --text-main:    #1e1510;
-    --text-sub:     #4a3828;
-    --text-muted:   #7a6855;
-    --text-teal:    #3d7870;
-    --text-gold:    #8a5c08;
+    --text-main: #1a100a;
+    /* was #1e1510 — negligible, keep as-is */
+    --text-sub: #2e1e10;
+    /* was #4a3828 — deeper brown, AA on ivory panels */
+    --text-muted: #5a4230;
+    /* was #7a6855 — richer, still "muted" feel */
+    --text-teal: #2a6660;
+    /* was #3d7870 — darker teal, clearer on glass */
+    --text-gold: #6e4400;
+    /* was #8a5c08 — much richer amber-brown */
 
     /* Layout */
-    --header-h:     66px;
-    --banner-h:     28vh;
-    --radius:       12px;
-    --radius-sm:    8px;
-    --radius-xs:    5px;
+    --header-h: 66px;
+    --banner-h: 28vh;
+    --radius: 12px;
+    --radius-sm: 8px;
+    --radius-xs: 5px;
 
     /* Motion */
-    --ease:         cubic-bezier(0.4, 0, 0.2, 1);
-    --ease-spring:  cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    --t-fast:       0.15s;
-    --t-base:       0.25s;
+    --ease: cubic-bezier(0.4, 0, 0.2, 1);
+    --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    --t-fast: 0.15s;
+    --t-base: 0.25s;
 
     /* Blur */
-    --blur-bg:      26px;
-    --blur-panel:   18px;
+    --blur-bg: 26px;
+    --blur-panel: 18px;
 }
 
 /* ══════════════════════════════════════════════════════════════
    1. RESET & BASE
 ══════════════════════════════════════════════════════════════ */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -81,7 +88,6 @@ body {
     width: 100%;
     height: 100%;
     min-height: 100dvh;
-    font-family: 'Cormorant Garamond', 'Amiri', Georgia, serif;
     color: var(--text-main);
     background: #e8e0d4;
     overscroll-behavior: none;
@@ -89,8 +95,13 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
-li { list-style: none; }
-button { cursor: pointer; }
+li {
+    list-style: none;
+}
+
+button {
+    cursor: pointer;
+}
 
 :focus-visible {
     outline: 2px solid var(--teal2);
@@ -99,11 +110,28 @@ button { cursor: pointer; }
 }
 
 /* ── Scrollbars ─────────────────────────────────────────────── */
-::-webkit-scrollbar             { width: 3px; height: 3px; }
-::-webkit-scrollbar-track       { background: transparent; }
-::-webkit-scrollbar-thumb       { background: var(--teal3); border-radius: 2px; }
-::-webkit-scrollbar-thumb:hover { background: var(--teal2); }
-*                               { scrollbar-width: thin; scrollbar-color: var(--teal3) transparent; }
+::-webkit-scrollbar {
+    width: 3px;
+    height: 3px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--teal3);
+    border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--teal2);
+}
+
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--teal3) transparent;
+}
 
 ::selection {
     background: rgba(90, 140, 132, 0.22);
@@ -141,12 +169,10 @@ button { cursor: pointer; }
     -webkit-backdrop-filter: blur(var(--blur-bg));
 
     /* Light warm wash — not opaque, lets photo color influence the UI */
-    background: linear-gradient(
-        158deg,
-        rgba(250, 244, 234, 0.38) 0%,
-        rgba(245, 238, 226, 0.30) 50%,
-        rgba(240, 230, 215, 0.36) 100%
-    );
+    background: linear-gradient(158deg,
+            rgba(250, 244, 234, 0.38) 0%,
+            rgba(245, 238, 226, 0.30) 50%,
+            rgba(240, 230, 215, 0.36) 100%);
 }
 
 .img.changeableBG,
@@ -189,7 +215,7 @@ button { cursor: pointer; }
 
     /* Warm gold shimmer top, teal hint bottom */
     box-shadow:
-        inset 0  1px 0 rgba(184, 130, 26, 0.18),
+        inset 0 1px 0 rgba(184, 130, 26, 0.18),
         inset 0 -1px 0 rgba(90, 140, 132, 0.18),
         0 2px 20px rgba(30, 21, 16, 0.12);
 }
@@ -213,6 +239,7 @@ button { cursor: pointer; }
     filter: drop-shadow(0 0 6px rgba(90, 140, 132, 0.5));
     transition: filter var(--t-base) var(--ease);
 }
+
 .mosqueIcon:hover {
     filter: drop-shadow(0 0 10px rgba(184, 130, 26, 0.55));
 }
@@ -235,13 +262,17 @@ button { cursor: pointer; }
         transform var(--t-base) var(--ease),
         border-color var(--t-base) var(--ease);
 }
+
 .settingsButton:hover {
     background: rgba(90, 140, 132, 0.22);
     border-color: var(--teal);
     color: var(--ink);
     transform: rotate(60deg);
 }
-.settingsButton:active { transform: rotate(90deg) scale(0.9); }
+
+.settingsButton:active {
+    transform: rotate(90deg) scale(0.9);
+}
 
 /* ══════════════════════════════════════════════════════════════
    5. MAIN LAYOUT SHELL
@@ -286,12 +317,10 @@ button { cursor: pointer; }
         linear-gradient(to right,
             rgba(20, 14, 8, 0.62) 0%,
             rgba(20, 14, 8, 0.22) 45%,
-            transparent 100%
-        ),
+            transparent 100%),
         linear-gradient(to top,
             rgba(20, 14, 8, 0.45) 0%,
-            transparent 55%
-        );
+            transparent 55%);
     pointer-events: none;
     z-index: 1;
 }
@@ -301,12 +330,10 @@ button { cursor: pointer; }
         linear-gradient(to left,
             rgba(20, 14, 8, 0.62) 0%,
             rgba(20, 14, 8, 0.22) 45%,
-            transparent 100%
-        ),
+            transparent 100%),
         linear-gradient(to top,
             rgba(20, 14, 8, 0.45) 0%,
-            transparent 55%
-        );
+            transparent 55%);
 }
 
 /* Date text — always white on the dark veil */
@@ -319,7 +346,6 @@ button { cursor: pointer; }
     display: flex;
     flex-direction: column;
     gap: .4rem;
-    font-family: 'Cormorant Garamond', serif;
     font-size: clamp(13px, 1.5vw, 19px);
     font-weight: 300;
     /* White here is fine — it sits on the dark veil, not the panel */
@@ -328,11 +354,22 @@ button { cursor: pointer; }
     text-shadow: 0 1px 10px rgba(0, 0, 0, 0.8);
     animation: fadeSlideIn .6s var(--ease) both;
 }
-[dir="rtl"] .temporalInfo { left: auto; right: 5%; }
+
+[dir="rtl"] .temporalInfo {
+    left: auto;
+    right: 5%;
+}
 
 @keyframes fadeSlideIn {
-    from { opacity: 0; transform: translateY(calc(-50% + 8px)); }
-    to   { opacity: 1; transform: translateY(-50%); }
+    from {
+        opacity: 0;
+        transform: translateY(calc(-50% + 8px));
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(-50%);
+    }
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -347,7 +384,7 @@ button { cursor: pointer; }
     background: rgba(90, 140, 132, 0.22);
 }
 
-.mainContent > div {
+.mainContent>div {
     flex: 1;
     min-width: 0;
     display: flex;
@@ -360,8 +397,15 @@ button { cursor: pointer; }
     -webkit-backdrop-filter: blur(var(--blur-panel));
 }
 
-.left  { border-left:  1px solid var(--glass-border); }
-.right { border-right: 1px solid var(--glass-border); display: flex; flex-direction: column; }
+.left {
+    border-left: 1px solid var(--glass-border);
+}
+
+.right {
+    border-right: 1px solid var(--glass-border);
+    display: flex;
+    flex-direction: column;
+}
 
 /* ══════════════════════════════════════════════════════════════
    8. LEFT COLUMN — INFO + PRAYER TIMES
@@ -374,20 +418,21 @@ button { cursor: pointer; }
     flex-direction: column;
     gap: .55rem;
     /* Whisper of warm gold at top */
-    background: linear-gradient(
-        180deg,
-        rgba(184, 130, 26, 0.06) 0%,
-        transparent 100%
-    );
+    background: linear-gradient(180deg,
+            rgba(184, 130, 26, 0.06) 0%,
+            transparent 100%);
 }
 
 /* Current time */
-.currentTime { display: flex; flex-direction: column; gap: .05rem; }
+.currentTime {
+    display: flex;
+    flex-direction: column;
+    gap: .05rem;
+}
 
 #currentTime {
-    font-family: 'Cormorant Garamond', serif;
     font-size: clamp(24px, 2.6vw, 34px);
-    font-weight: 300;
+    font-weight: 500;
     color: var(--ink);
     letter-spacing: .07em;
     font-variant-numeric: tabular-nums;
@@ -395,7 +440,11 @@ button { cursor: pointer; }
 }
 
 /* Next prayer block */
-.nextPrayer { display: flex; flex-direction: column; gap: .25rem; }
+.nextPrayer {
+    display: flex;
+    flex-direction: column;
+    gap: .25rem;
+}
 
 .next-row {
     display: flex;
@@ -406,7 +455,6 @@ button { cursor: pointer; }
 
 .nextPrayer h3,
 .next-row strong {
-    font-family: 'Cinzel', serif;
     font-size: clamp(13px, 1.3vw, 16px);
     font-weight: 500;
     color: var(--text-teal);
@@ -415,18 +463,19 @@ button { cursor: pointer; }
 
 .nextPrayer p,
 .next-time {
-    font-family: 'Cormorant Garamond', serif;
     font-size: clamp(14px, 1.4vw, 18px);
     color: var(--text-gold);
 }
 
-#nextPrayer     { color: var(--text-teal); font-family: 'Cinzel', serif; }
-#nextPrayerTime { color: var(--text-gold); font-family: 'Cormorant Garamond', serif; }
 
-.countdown-row { display: flex; align-items: baseline; gap: .4rem; flex-wrap: wrap; }
+.countdown-row {
+    display: flex;
+    align-items: baseline;
+    gap: .4rem;
+    flex-wrap: wrap;
+}
 
 #remainingPrayerTime {
-    font-family: 'Cormorant Garamond', serif;
     font-size: clamp(15px, 1.6vw, 20px);
     color: var(--text-gold);
     font-variant-numeric: tabular-nums;
@@ -452,34 +501,37 @@ button { cursor: pointer; }
 
 .prayerTimes li,
 .prayer {
+    position: relative;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: .65rem 1.5rem;
-    font-family: 'Cinzel', serif;
-    font-size: clamp(12px, 1.2vw, 14px);
+    padding: 0.65rem .5rem;
+    font-size: clamp(6px, 1.2vw, 14px);
     letter-spacing: .06em;
     color: var(--text-sub);
-    border-bottom: 1px solid rgba(90, 140, 132, 0.10);
+    /* no change needed, just inherits the better value */
+    border-bottom: 1px solid rgba(90, 140, 132, 0.25);
     transition:
         background var(--t-fast) var(--ease),
         color var(--t-fast) var(--ease);
     cursor: default;
-    position: relative;
 }
 
 /* Remove old alternating background */
-.prayerTimes li:nth-child(odd) { background-color: transparent; }
+.prayerTimes li:nth-child(odd) {
+    background-color: transparent;
+}
 
-.prayerTimes li:hover,
+/* .prayerTimes li:hover,
 .prayer:hover {
     background: rgba(250, 246, 240, 0.35);
     color: var(--ink);
-}
+} */
 
 /* ── Next prayer highlight ──────────────────────────────────── */
 .prayer.active-prayer {
-    background: rgba(90, 140, 132, 0.12);
+    /*     background: rgba(90, 140, 132, 0.12);
+ */
     color: var(--ink);
 }
 
@@ -495,6 +547,7 @@ button { cursor: pointer; }
     background: var(--teal2);
     box-shadow: 0 0 8px rgba(90, 140, 132, 0.5);
 }
+
 [dir="rtl"] .prayer.active-prayer::before {
     left: auto;
     right: 0;
@@ -502,7 +555,6 @@ button { cursor: pointer; }
 }
 
 .prayer-label {
-    font-family: 'Cinzel', serif;
     font-size: clamp(11px, 1.1vw, 13px);
     letter-spacing: .07em;
     text-transform: uppercase;
@@ -512,13 +564,12 @@ button { cursor: pointer; }
 /* Time badge */
 .prayer-time,
 .prayerTimes li span {
-    font-family: 'Cormorant Garamond', serif;
     font-size: clamp(14px, 1.4vw, 18px);
     font-weight: 400;
     color: var(--text-gold);
     background: rgba(184, 130, 26, 0.09);
     border: 1px solid rgba(184, 130, 26, 0.20);
-    padding: .2rem .85rem;
+    padding: 0 .85rem;
     border-radius: 20px;
     letter-spacing: .04em;
     transition:
@@ -557,7 +608,6 @@ button { cursor: pointer; }
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: 'Cinzel', serif;
     font-size: .75rem;
     color: var(--text-muted);
     letter-spacing: .1em;
@@ -600,7 +650,6 @@ button { cursor: pointer; }
     border-radius: var(--radius-sm);
     color: var(--text-sub);
 
-    font-family: 'Cinzel', serif;
     font-size: .55rem;
     font-weight: 400;
     letter-spacing: .05em;
@@ -609,11 +658,11 @@ button { cursor: pointer; }
 
     -webkit-tap-highlight-color: transparent;
     transition:
-        background  var(--t-base) var(--ease),
+        background var(--t-base) var(--ease),
         border-color var(--t-base) var(--ease),
-        transform   var(--t-base) var(--ease-spring),
-        box-shadow  var(--t-base) var(--ease),
-        color       var(--t-base) var(--ease);
+        transform var(--t-base) var(--ease-spring),
+        box-shadow var(--t-base) var(--ease),
+        color var(--t-base) var(--ease);
 }
 
 .featureButton button i {
@@ -626,7 +675,8 @@ button { cursor: pointer; }
 
 .featureButton button span {
     color: var(--text-muted);
-    font-size: .52rem;
+    /* same — inherits the improved token */
+    font-size: .82rem;
     transition: color var(--t-base) var(--ease);
 }
 
@@ -639,9 +689,17 @@ button { cursor: pointer; }
         0 6px 20px rgba(30, 21, 16, 0.14),
         0 0 0 1px rgba(90, 140, 132, 0.10) inset;
 }
-.featureButton button:hover i    { color: var(--gold); transform: scale(1.1); }
-.featureButton button:hover span { color: var(--text-sub); }
-.featureButton button:active     {
+
+.featureButton button:hover i {
+    color: var(--gold);
+    transform: scale(1.1);
+}
+
+.featureButton button:hover span {
+    color: var(--text-sub);
+}
+
+.featureButton button:active {
     transform: translateY(0) scale(0.96);
     box-shadow: none;
     background: rgba(90, 140, 132, 0.14);
@@ -657,7 +715,8 @@ button { cursor: pointer; }
 /* ══════════════════════════════════════════════════════════════
    10. SHARED ELEMENTS
 ══════════════════════════════════════════════════════════════ */
-hr, .section-divider {
+hr,
+.section-divider {
     flex-shrink: 0;
     border: none;
     border-top: 1px solid var(--glass-border);
@@ -666,22 +725,33 @@ hr, .section-divider {
 
 .time-label,
 .next-label,
-.countdown-label,
-.cal-label {
-    font-family: 'Cinzel', serif;
-    font-size: clamp(9px, .8vw, 11px);
+.countdown-label {
+    font-size: clamp(12px, 1.3vw, 12px);
     letter-spacing: .10em;
+    font-weight: 700 !important;
     text-transform: uppercase;
-    color: var(--text-muted);
+    color: var(--text-main);
 }
-.cal-label { margin-inline-end: .3rem; }
+
+.cal-label {
+    margin-inline-end: .3rem;
+    font-weight: 700 !important;
+    font-size: clamp(12px, 1.3vw, 12px);
+    filter: drop-shadow(1px 1px 5px black);
+}
 
 /* ══════════════════════════════════════════════════════════════
    11. RTL
 ══════════════════════════════════════════════════════════════ */
-[dir="rtl"] body  { font-family: 'Amiri', 'Cormorant Garamond', serif; }
-[dir="rtl"] .left  { border-left: none; border-right: 1px solid var(--glass-border); }
-[dir="rtl"] .right { border-right: none; border-left: 1px solid var(--glass-border); }
+[dir="rtl"] .left {
+    border-left: none;
+    border-right: 1px solid var(--glass-border);
+}
+
+[dir="rtl"] .right {
+    border-right: none;
+    border-left: 1px solid var(--glass-border);
+}
 
 /* ══════════════════════════════════════════════════════════════
    12. RESPONSIVE
@@ -689,19 +759,46 @@ hr, .section-divider {
 
 /* Large desktop */
 @media screen and (min-width: 1400px) {
-    .main { width: 78%; }
-    :root { --banner-h: 26vh; }
+    .main {
+        width: 78%;
+    }
+
+    :root {
+        --banner-h: 26vh;
+    }
 }
 
-@media screen and (max-width: 1280px) { .main { width: 88%; } }
-@media screen and (max-width: 1100px) { .main { width: 94%; } }
+@media screen and (max-width: 1280px) {
+    .main {
+        width: 88%;
+    }
+}
+
+@media screen and (max-width: 1100px) {
+    .main {
+        width: 94%;
+    }
+}
 
 /* Tablet landscape */
 @media screen and (min-width: 769px) and (max-width: 1024px) {
-    :root { --header-h: 60px; --banner-h: 24vh; }
-    .main { width: 96%; }
-    .right .features { gap: .35rem; padding: .3rem .6rem; }
-    .featureButton button { min-height: 52px; }
+    :root {
+        --header-h: 60px;
+        --banner-h: 24vh;
+    }
+
+    .main {
+        width: 96%;
+    }
+
+    .right .features {
+        gap: .35rem;
+        padding: .3rem .6rem;
+    }
+
+    .featureButton button {
+        min-height: 52px;
+    }
 }
 
 /* ── Tablet portrait + mobile ───────────────────────────────── */
@@ -719,7 +816,8 @@ hr, .section-divider {
     /* Photo stays fixed — acts as wallpaper while content scrolls */
     .wrapperBackground {
         position: fixed;
-        background-attachment: scroll; /* iOS fixed-bg bug fix */
+        background-attachment: scroll;
+        /* iOS fixed-bg bug fix */
     }
 
     /* Overlay grows with content */
@@ -748,7 +846,10 @@ hr, .section-divider {
     }
 
     /* Banner */
-    .timeInfos { height: var(--banner-h); flex-shrink: 0; }
+    .timeInfos {
+        height: var(--banner-h);
+        flex-shrink: 0;
+    }
 
     /* Columns stack */
     .mainContent {
@@ -758,7 +859,7 @@ hr, .section-divider {
         min-height: 0;
     }
 
-    .mainContent > div {
+    .mainContent>div {
         width: 100%;
         height: auto;
         min-height: 0;
@@ -767,17 +868,39 @@ hr, .section-divider {
     }
 
     /* Prayer list — full height, no inner scroll */
-    .left .prayerTimes { overflow: visible; height: auto; }
-    .prayerTimes ul, .prayerTimes { height: auto; justify-content: flex-start; }
-    .prayerTimes li, .prayer { padding: .75rem 1.1rem; }
+    .left .prayerTimes {
+        overflow: visible;
+        height: auto;
+    }
+
+    .prayerTimes ul,
+    .prayerTimes {
+        height: auto;
+        justify-content: flex-start;
+    }
+
+    .prayerTimes li,
+    .prayer {
+        padding: .75rem 1.1rem;
+    }
 
     /* Column borders */
-    .left  { border-left: none; border-right: none; border-bottom: 1px solid var(--glass-border); }
-    .right { border-right: none; border-top: 1px solid var(--glass-border); }
+    .left {
+        border-left: none;
+        border-right: none;
+        border-bottom: 1px solid var(--glass-border);
+    }
+
+    .right {
+        border-right: none;
+        border-top: 1px solid var(--glass-border);
+    }
 
     /* Calendar */
     .right .calendar-section,
-    .right .callendar { min-height: 160px; }
+    .right .callendar {
+        min-height: 160px;
+    }
 
     /* Features — natural height */
     .right .featureSection {
@@ -786,19 +909,45 @@ hr, .section-divider {
         flex: unset;
         padding: .4rem 0 1rem;
     }
-    .right .features { grid-template-columns: repeat(5, 1fr); gap: .4rem; padding: .3rem .6rem; }
-    .featureButton button { min-height: 58px; font-size: .54rem; border-radius: var(--radius-xs); }
-    .featureButton button i { font-size: 1rem; }
 
-    .left .infos { padding: 1rem 1.1rem; }
-    #currentTime { font-size: 28px; }
+    .right .features {
+        grid-template-columns: repeat(5, 1fr);
+        gap: .4rem;
+        padding: .3rem .6rem;
+    }
+
+    div.wrap-features {
+        position: relative !important;
+    }
+
+    .featureButton button {
+        min-height: 58px;
+        font-size: .54rem;
+        border-radius: var(--radius-xs);
+    }
+
+    .featureButton button i {
+        font-size: 1rem;
+    }
+
+    .left .infos {
+        padding: 1rem 1.1rem;
+    }
+
+    #currentTime {
+        font-size: 28px;
+    }
 }
 
 /* Small mobile */
 @media screen and (max-width: 480px) {
-    :root { --banner-h: 170px; }
+    :root {
+        --banner-h: 170px;
+    }
 
-    .headerBar { padding: 0 .9rem; }
+    .headerBar {
+        padding: 0 .9rem;
+    }
 
     .right .features {
         grid-template-columns: repeat(4, 1fr);
@@ -806,23 +955,44 @@ hr, .section-divider {
         padding: .3rem .5rem;
     }
 
-    .featureButton button { min-height: 62px; }
-    .temporalInfo { font-size: 12px; gap: .25rem; }
-    #currentTime { font-size: 24px; }
-    .prayerTimes li, .prayer { padding: .65rem .9rem; }
+    .featureButton button {
+        min-height: 62px;
+    }
+
+    .temporalInfo {
+        font-size: 12px;
+        gap: .25rem;
+    }
+
+    #currentTime {
+        font-size: 24px;
+    }
+
+    .prayerTimes li,
+    .prayer {
+        padding: .65rem .9rem;
+    }
 }
 
 /* Very small */
 @media screen and (max-width: 360px) {
-    .right .features { grid-template-columns: repeat(3, 1fr); }
-    .featureButton button { font-size: .5rem; }
+    .right .features {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .featureButton button {
+        font-size: .5rem;
+    }
 }
 
 /* ══════════════════════════════════════════════════════════════
    13. REDUCED MOTION
 ══════════════════════════════════════════════════════════════ */
 @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after {
+
+    *,
+    *::before,
+    *::after {
         animation-duration: 0.01ms !important;
         transition-duration: 0.01ms !important;
     }
