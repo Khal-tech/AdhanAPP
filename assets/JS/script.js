@@ -4,7 +4,7 @@
 //  CONSTANTS & DATA
 // ═══════════════════════════════════════════════════════════════════════════
 
-var MECCA = { lat: 21.4225, lng: 39.8262 };
+var MECCA = { lat: 21.4224779, lng: 39.8251832 };
 
 var CALC_METHODS = [
   { value: "auto", en: "Auto-detect (Recommended)", ar: "تلقائي (موصى به)" },
@@ -84,7 +84,7 @@ var T = {
       "Sha'ban",
       "Ramadan",
       "Shawwal",
-      "Dhul Qa'dah",
+      "Dhul Qi'dah",
       "Dhul Hijjah",
     ],
     weekDaysShort: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
@@ -94,11 +94,11 @@ var T = {
     tasbihReset: "Reset",
     tasbihLimit: "Count Limit",
     tasbihCompleted: "SubhanAllah — Count Complete",
-    ishraq: "Ishraq",
+    /*     ishraq: "Ishraq", */
     duha: "Duha",
     awwabeen: "Awwabeen",
     tahajjud: "Tahajjud",
-    ishraqDesc: "15 min after sunrise · 2 rak'at",
+    /*     ishraqDesc: "15 min after sunrise · 2 rak'at", */
     duhaDesc: "Ishraq to before Dhuhr · 2–8 rak'at",
     awwabeenDesc: "After Maghrib · 6 rak'at",
     tahajjudDesc: "Last third of night · 2–8 rak'at",
@@ -125,7 +125,7 @@ var T = {
   ar: {
     prayerTimesOf: "أوقات الصلاة في",
     timeNowIs: "الوقت الحالي",
-    nextIs: "الصلاة القادمة",
+    nextIs: "الصلاة الاتية",
     timeToPrayer: "الوقت المتبقي:",
     fajr: "الفجر",
     churuq: "الشروق",
@@ -186,10 +186,10 @@ var T = {
     duha: "الضحى",
     awwabeen: "الأوّابين",
     tahajjud: "التهجّد",
-    ishraqDesc: "١٥ دقيقة بعد الشروق · ركعتان",
-    duhaDesc: "من الإشراق حتى قبيل الظهر · ٢–٨ ركعات",
-    awwabeenDesc: "بعد المغرب · ٦ ركعات",
-    tahajjudDesc: "الثلث الأخير من الليل · ٢–٨ ركعات",
+    /*     ishraqDesc: "١٥ دقيقة بعد الشروق · ركعتان", */
+    duhaDesc: "من الإشراق حتى قبيل الظهر · 2–8 ركعات",
+    awwabeenDesc: "بعد المغرب · 6 ركعات",
+    tahajjudDesc: "الثلث الأخير من الليل · 2–8 ركعات",
     nightDuration: "مدة الليل",
     firstThird: "الثلث الأول",
     secondThird: "الثلث الثاني",
@@ -520,7 +520,7 @@ function hijriDaysInMonth(month, year) {
 //  APPLY LANGUAGE / TRANSLATIONS
 // ═══════════════════════════════════════════════════════════════════════════
 
-function applyLanguage() {
+/* function applyLanguage() {
   var html = document.documentElement;
   html.setAttribute("lang", state.lang);
   html.setAttribute("dir", state.lang === "ar" ? "rtl" : "ltr");
@@ -554,6 +554,109 @@ function applyLanguage() {
   } else {
     panel.style.right = "0";
     panel.style.left = "auto";
+  }
+} */
+
+/* function applyLanguage() {
+  var html = document.documentElement;
+  html.setAttribute("lang", state.lang);
+  html.setAttribute("dir", state.lang === "ar" ? "rtl" : "ltr");
+
+  // Update all data-i18n elements
+  document.querySelectorAll("[data-i18n]").forEach(function (el) {
+    var key = el.getAttribute("data-i18n");
+    var val = t(key);
+    if (val) el.textContent = val;
+  });
+
+  // Re-render prayer times with new format/language
+  if (state.prayerTimings) {
+    renderPrayerTimes();
+    renderHijriCalendarWidget();
+    // Also update the Hijri date text in the main display
+    updateHijriDateDisplay();
+  }
+
+  // Update settings panel active states
+  document
+    .getElementById("langEn")
+    .classList.toggle("active", state.lang === "en");
+  document
+    .getElementById("langAr")
+    .classList.toggle("active", state.lang === "ar");
+
+  // Settings panel direction mirrors page
+  var panel = document.getElementById("settingsPanel");
+  if (state.lang === "ar") {
+    panel.style.left = "0";
+    panel.style.right = "auto";
+  } else {
+    panel.style.right = "0";
+    panel.style.left = "auto";
+  }
+} */
+
+function applyLanguage() {
+  var html = document.documentElement;
+  html.setAttribute("lang", state.lang);
+  html.setAttribute("dir", state.lang === "ar" ? "rtl" : "ltr");
+
+  // Update all data-i18n elements
+  document.querySelectorAll("[data-i18n]").forEach(function (el) {
+    var key = el.getAttribute("data-i18n");
+    var val = t(key);
+    if (val) el.textContent = val;
+  });
+
+  // Re-render prayer times with new format/language
+  if (state.prayerTimings) {
+    renderPrayerTimes();
+    renderHijriCalendarWidget();
+    // Update the date displays with correct language
+    updateDateDisplays();
+  }
+
+  // Update settings panel active states
+  document
+    .getElementById("langEn")
+    .classList.toggle("active", state.lang === "en");
+  document
+    .getElementById("langAr")
+    .classList.toggle("active", state.lang === "ar");
+
+  // Settings panel direction mirrors page
+  var panel = document.getElementById("settingsPanel");
+  if (state.lang === "ar") {
+    panel.style.left = "0";
+    panel.style.right = "auto";
+  } else {
+    panel.style.right = "0";
+    panel.style.left = "auto";
+  }
+}
+
+// Add this function to update both date displays
+function updateDateDisplays() {
+  if (state.prayerDate) {
+    // Update Miladi (Gregorian) date
+    document.getElementById("miladiCal").textContent =
+      state.prayerDate.gregorian.date;
+
+    // Update Hijri date with correct language
+    if (state.hijriYear && state.hijriMonth && state.hijriDay) {
+      var hijriMonthName = T[state.lang].hijriMonths[state.hijriMonth - 1];
+      document.getElementById("hijriCal").textContent =
+        state.hijriDay + " " + hijriMonthName + " " + state.hijriYear;
+    }
+  }
+}
+
+// Add this new function to update the Hijri date display
+function updateHijriDateDisplay() {
+  if (state.hijriYear && state.hijriMonth && state.hijriDay) {
+    var hijriMonthName = T[state.lang].hijriMonths[state.hijriMonth - 1];
+    document.getElementById("hijriCal").textContent =
+      state.hijriDay + " " + hijriMonthName + " " + state.hijriYear;
   }
 }
 
@@ -1011,7 +1114,7 @@ function renderHijriCalModal() {
     monthName +
     " " +
     year +
-    " AH</div>" +
+    " </div>" +
     '<button class="hcal-nav-btn" id="hcalNext"><i class="fa-solid fa-chevron-' +
     (state.lang === "ar" ? "left" : "right") +
     '"></i></button>' +
@@ -1069,7 +1172,7 @@ function renderHijriCalendarWidget() {
     monthName +
     " " +
     state.hijriYear +
-    " AH</span>" +
+    " </span>" +
     "</div>" +
     '<div class="hcal-weekdays">';
   weekDays.forEach(function (d, i) {
@@ -1230,7 +1333,7 @@ function openSunnahTimes() {
 
   var html =
     '<div class="sunnah-wrap">' +
-    row("fa-sunrise", t("ishraq"), t("ishraqDesc"), ishraqTime, "") +
+    /*     row("fa-sunrise", t("ishraq"), t("ishraqDesc"), ishraqTime, "") +  */
     row("fa-sun", t("duha"), t("duhaDesc"), ishraqTime, duhaEndTime) +
     row(
       "fa-moon",
@@ -1381,10 +1484,13 @@ function openQibla() {
     '<div class="qibla-wrap">' +
     // Display the calculated bearing
     '<div class="qibla-bearing-info">' +
-    '<span class="qibla-degrees">' + bearingFixed + '°</span>' +
-    '<span class="qibla-bearing-label">' + t("qiblaBearing") + '</span>' +
-    '</div>' +
-
+    '<span class="qibla-degrees">' +
+    bearingFixed +
+    "°</span>" +
+    '<span class="qibla-bearing-label">' +
+    t("qiblaBearing") +
+    "</span>" +
+    "</div>" +
     // The compass container - this stays fixed
     '<div class="qibla-compass-container">' +
     // The rotating compass rose INSIDE the container
@@ -1394,59 +1500,64 @@ function openQibla() {
     '<div class="compass-cardinal compass-e">E</div>' +
     '<div class="compass-cardinal compass-s">S</div>' +
     '<div class="compass-cardinal compass-w">W</div>' +
-    '</div>' +
-
+    "</div>" +
     // The needle - FIXED, always points to Mecca. Placed on top.
     '<div class="qibla-needle" id="qiblaNeedle">' +
     '<div class="needle-head"></div>' +
     '<div class="needle-center"></div>' +
     '<div class="needle-tail"></div>' +
-    '</div>' +
-    '</div>' + // End .qibla-compass-container
-
+    "</div>" +
+    "</div>" + // End .qibla-compass-container
     // Guidance text area
     '<div class="qibla-guidance" id="qiblaGuidance">' +
     '<div class="guidance-icon"><i class="fa-solid fa-compass"></i></div>' +
-    '<div class="guidance-text" id="guidanceText">' + t("qiblaPermission") + '</div>' +
-    '</div>' +
-
+    '<div class="guidance-text" id="guidanceText">' +
+    t("qiblaPermission") +
+    "</div>" +
+    "</div>" +
     // Permission button (hidden once active)
     '<div class="qibla-permission-wrap" id="qiblaPermWrap">' +
     '<button class="qibla-perm-btn" id="qiblaPermBtn">' +
-    '<i class="fa-solid fa-compass"></i> ' + t("qiblaPermission") +
-    '</button>' +
-    '</div>' +
-    '</div>';
+    '<i class="fa-solid fa-compass"></i> ' +
+    t("qiblaPermission") +
+    "</button>" +
+    "</div>" +
+    "</div>";
 
   openModal(t("qibla"), html);
   state.qiblaActive = true;
 
   // Immediately point the needle correctly (static bearing)
-  var needle = document.getElementById('qiblaNeedle');
+  var needle = document.getElementById("qiblaNeedle");
   if (needle) {
-    needle.style.transform = 'rotate(' + bearing + 'deg)';
+    needle.style.transform = "rotate(" + bearing + "deg)";
   }
 
   // Bind the permission button click event
-  document.getElementById('qiblaPermBtn').addEventListener('click', function() {
-    startCompass(bearing);
-  });
+  document
+    .getElementById("qiblaPermBtn")
+    .addEventListener("click", function () {
+      startCompass(bearing);
+    });
 
   // Auto-start on Android (no permission needed)
-  if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission !== 'function') {
+  if (
+    typeof DeviceOrientationEvent !== "undefined" &&
+    typeof DeviceOrientationEvent.requestPermission !== "function"
+  ) {
     startCompass(bearing);
   }
 }
 
 function startCompass(qiblaBearingDeg) {
-  var rose = document.getElementById('compassRose');
-  var guidanceText = document.getElementById('guidanceText');
-  var guidanceIcon = document.querySelector('.guidance-icon');
-  var permWrap = document.getElementById('qiblaPermWrap');
+  var rose = document.getElementById("compassRose");
+  var guidanceText = document.getElementById("guidanceText");
+  var guidanceIcon = document.querySelector(".guidance-icon");
+  var permWrap = document.getElementById("qiblaPermWrap");
   var isAligned = false; // Flag for haptic feedback
 
   // Hide the permission button once activated
-  if (permWrap) permWrap.style.display = 'none';
+  if (permWrap) permWrap.style.display = "none";
 
   // Function to calculate guidance message
   function getGuidance(angleDiff) {
@@ -1454,23 +1565,39 @@ function startCompass(qiblaBearingDeg) {
     var lang = state.lang;
 
     if (absDiff < 10) {
-      return { text: lang === 'ar' ? '✓ اتجاهك صحيح' : '✓ Facing Qibla', level: 'aligned' };
+      return {
+        text: lang === "ar" ? "✓ اتجاهك صحيح" : "✓ Facing Qibla",
+        level: "aligned",
+      };
     } else if (absDiff > 170) {
-      return { text: lang === 'ar' ? 'اتجاه معاكس - استدر' : 'Opposite direction - turn around', level: 'opposite' };
+      return {
+        text:
+          lang === "ar"
+            ? "اتجاه معاكس - استدر"
+            : "Opposite direction - turn around",
+        level: "opposite",
+      };
     }
 
-    var direction = angleDiff > 0 ? (lang === 'ar' ? 'يمينًا' : 'right') : (lang === 'ar' ? 'يسارًا' : 'left');
-    var intensity = '';
+    var direction =
+      angleDiff > 0
+        ? lang === "ar"
+          ? "يمينًا"
+          : "right"
+        : lang === "ar"
+          ? "يسارًا"
+          : "left";
+    var intensity = "";
 
-    if (absDiff > 90) intensity = lang === 'ar' ? 'استدر ' : 'Turn ';
-    else if (absDiff > 30) intensity = lang === 'ar' ? 'أدر ' : 'Turn ';
-    else intensity = lang === 'ar' ? 'انحرف ' : 'Adjust ';
+    if (absDiff > 90) intensity = lang === "ar" ? "استدر " : "Turn ";
+    else if (absDiff > 30) intensity = lang === "ar" ? "أدر " : "Turn ";
+    else intensity = lang === "ar" ? "انحرف " : "Adjust ";
 
-    return { text: intensity + direction, level: 'adjusting' };
+    return { text: intensity + direction, level: "adjusting" };
   }
 
   // The main compass handler
-  state.compassWatch = function(event) {
+  state.compassWatch = function (event) {
     // Get the device's compass heading
     var heading = null;
 
@@ -1487,7 +1614,7 @@ function startCompass(qiblaBearingDeg) {
     // If we have a valid heading, update the UI
     if (heading !== null) {
       // Rotate the compass rose so that 'N' on the rose aligns with magnetic north
-      if (rose) rose.style.transform = 'rotate(' + (-heading) + 'deg)';
+      if (rose) rose.style.transform = "rotate(" + -heading + "deg)";
 
       // The needle is already pointed at the static Qibla bearing.
       // Now calculate how far off the user is from that bearing.
@@ -1503,8 +1630,8 @@ function startCompass(qiblaBearingDeg) {
 
       // Update guidance icon color based on alignment
       if (guidanceIcon) {
-        guidanceIcon.className = 'guidance-icon guidance-' + guidance.level;
-        if (guidance.level === 'aligned') {
+        guidanceIcon.className = "guidance-icon guidance-" + guidance.level;
+        if (guidance.level === "aligned") {
           guidanceIcon.innerHTML = '<i class="fa-solid fa-kaaba"></i>';
           // Haptic feedback when first aligned
           if (!isAligned && navigator.vibrate) {
@@ -1520,25 +1647,36 @@ function startCompass(qiblaBearingDeg) {
   };
 
   // Request permission and start listening
-  if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+  if (
+    typeof DeviceOrientationEvent !== "undefined" &&
+    typeof DeviceOrientationEvent.requestPermission === "function"
+  ) {
     // iOS
     DeviceOrientationEvent.requestPermission()
-      .then(function(permissionState) {
-        if (permissionState === 'granted') {
-          window.addEventListener('deviceorientation', state.compassWatch, false);
-          if (guidanceText) guidanceText.textContent = state.lang === 'ar' ? 'جاري البحث...' : 'Searching...';
+      .then(function (permissionState) {
+        if (permissionState === "granted") {
+          window.addEventListener(
+            "deviceorientation",
+            state.compassWatch,
+            false,
+          );
+          if (guidanceText)
+            guidanceText.textContent =
+              state.lang === "ar" ? "جاري البحث..." : "Searching...";
         } else {
           if (guidanceText) guidanceText.textContent = t("qiblaUnavailable");
         }
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.error("Compass permission error:", error);
         if (guidanceText) guidanceText.textContent = t("qiblaUnavailable");
       });
-  } else if (typeof DeviceOrientationEvent !== 'undefined') {
+  } else if (typeof DeviceOrientationEvent !== "undefined") {
     // Android and other supported browsers
-    window.addEventListener('deviceorientation', state.compassWatch, false);
-    if (guidanceText) guidanceText.textContent = state.lang === 'ar' ? 'جاري البحث...' : 'Searching...';
+    window.addEventListener("deviceorientation", state.compassWatch, false);
+    if (guidanceText)
+      guidanceText.textContent =
+        state.lang === "ar" ? "جاري البحث..." : "Searching...";
   } else {
     // Browser doesn't support the API
     if (guidanceText) guidanceText.textContent = t("qiblaUnavailable");
@@ -1572,7 +1710,8 @@ function chooseBgImage(
   ishaM,
 ) {
   if (currentMinutes <= fajrM + 30) return "assets/IMG/TIMES/fajrTime.avif";
-  if (currentMinutes <= sunriseM + 30) return "assets/IMG/TIMES/sunriseTime.avif";
+  if (currentMinutes <= sunriseM + 30)
+    return "assets/IMG/TIMES/sunriseTime.avif";
   if (currentMinutes < dhuhrM + 75) return "assets/IMG/TIMES/dhuhrTime.avif";
   if (currentMinutes < asrM + 100) return "assets/IMG/TIMES/asrTime.avif";
   if (currentMinutes < maghribM - 10) return "assets/IMG/TIMES/sunsetTime.avif";
@@ -1755,8 +1894,6 @@ function fetchPrayerTimes(geo) {
     flag.className = "";
     flag.classList.add("fi", "fi-" + geo.countryCode.toLowerCase(), "fis");
 
-    document.getElementById("miladiCal").textContent =
-      api.data.date.gregorian.date;
     document.getElementById("hijriCal").textContent =
       api.data.date.hijri.day +
       " " +
